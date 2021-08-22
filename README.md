@@ -1,17 +1,3 @@
-8월 17일 화요일 - 2학기 수강신청
-8월 18일 수요일 - 백신예ㅑㄱ
-8월 23일 월요일 - 2학기 등록금 납부
-8월 25일 수요일 - 전체학년 수강신청
-
-9월 2~3일 - 수강신청 확인 및 변경
-
-8월 알바
-3일 : 3시 ~ 6시: 3시간
-10일: 2시 ~ 6시 반: 4시간 반
-18일: 2시 ~ 6시 반: 4시간 반
-25일: 2시 ~ 6시 반: 4시간 반
-
-
 # Play, And[Play, &]
 ## 개요
 테니스 동아리 활동과 Ello Rating System에 착안하여 시작한 프로젝트입니다.<br />
@@ -25,7 +11,7 @@ https://github.com/Hyeon-Gwang : 메인 페이지와 Public 페이지 담당
 
 2인 제작이며 모두 프론트엔드 개발을 하기에 백엔드는 파이어베이스를 이용하였습니다.
 
-## 스택
+## 사용 기술
 <img src="https://img.shields.io/badge/HTML-eb4d4b?style=for-the-badge&logo=HTML5&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/CSS-22a6b3?style=for-the-badge&logo=CSS3&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/Next.JS-30336b?style=for-the-badge&logo=Next.js&logoColor=white"/>&nbsp;
