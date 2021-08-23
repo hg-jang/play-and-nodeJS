@@ -5,12 +5,12 @@ import UserObjContext, { UserObjProvider } from '../src/contextAPI/UserObjContex
 import wrapper from '../store/configureStore'
 
 function MyApp({ Component, pageProps }) {
-  const [userObj, setUserObj] = useContext(UserObjContext)
+  // const [userObj, setUserObj] = useContext(UserObjContext)
   return (
     <div id="main">
-      <UserObjProvider value={userObj, setUserObj}>
+      {/* <UserObjProvider value={userObj, setUserObj}> */}
         <Component {...pageProps} />
-      </UserObjProvider>
+      {/* </UserObjProvider> */}
     </div>
   )
 }

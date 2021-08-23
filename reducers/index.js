@@ -1,6 +1,8 @@
 import { HYDRATE } from "next-redux-wrapper";
 import { combineReducers } from "redux";
 
+import auth from './auth'
+
 const rootReducer = combineReducers({
   index: (state = {}, action) => {
     switch(action.type) {
@@ -11,7 +13,7 @@ const rootReducer = combineReducers({
         return state
     }
   },
-  // reducers
+  auth,
 })
 
 export default rootReducer
