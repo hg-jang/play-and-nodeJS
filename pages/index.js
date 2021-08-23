@@ -1,89 +1,58 @@
-import { useEffect, useCallback, useState, useContext } from 'react'
-// import { authService, dbService } from '../src/fbase'
-// import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
-// import UserObjContext from '../src/contextAPI/UserObjContext'
-// import Head from 'next/head'
-// import Footer from '../src/index/component/Footer'
-// import Top from '../src/index/component/Top'
-// import Main from '../src/index/component/Main'
-import { useDispatch } from 'react-redux'
-import useInput from '../hooks/useInput'
-import { SIGN_UP_REQUEST } from '../reducers/auth'
-import { authService, dbService, fbase } from '../src/fbase'
+import React from 'react'
+import Link from 'next/link'
+import styles from '../src/css/index.module.css'
+import classNames from 'classnames'
 
 const Home = () => {
-  const dispatch = useDispatch()
-  const [email, onChangeEmail] = useInput('')
-  const [password, onChangePassword] = useInput('')
+  // const dispatch = useDispatch()
+  // const [email, onChangeEmail] = useInput('')
+  // const [password, onChangePassword] = useInput('')
 
-  const onClick = useCallback(() => {
-    console.log(email, password)
-    dispatch({
-      type: SIGN_UP_REQUEST,
-      data: { email: email, password: password },
-    })
-  }, [email, password])
+  // const onClick = useCallback(() => {
+  //   console.log(email, password)
+  //   dispatch({
+  //     type: SIGN_UP_REQUEST,
+  //     data: { email: email, password: password },
+  //   })
+  // }, [email, password])
 
   return (
-    <>
-      <p>인덱스  페이지입니다.</p>
-    </>
+    <div className={styles.main}>
+      <div className={classNames({["container"]: true, [styles.container__index__main]: true})}>
+        <div className={styles.main__section}>
+          <div className={styles.greeting}>
+            <h1>'Play &'는 온라인 모임 공간을 찾던 테니스 동호인들을 위한 새로운 정답이 될&nbsp;것입니다.</h1>
+            <h2>'Play &'와 함께 실력을 쌓아가고 새로운 만남을 이어나가세요.</h2>
+          </div>
+          <div className={classNames({["button__index"]: true, [styles.button__index__main]: true})}><Link href="/public/public_main"><a>Get Started</a></Link></div>
+        </div>
+        <div className={styles.main__section}>
+          <div className={styles.introduce}>
+            <div className={styles.introduce__board}>
+              <h1 className={styles.introduce__title}>게시판</h1>
+              <p className={styles.introduce__expression}>그룹원들에게 중요한 사항을 전달하세요.</p>
+              {/* 버튼 추가 혹은 버튼 없이 */}
+            </div>
+            <div className={styles.introduce__chat}>
+              <h1 className={styles.introduce__title}>대화</h1>
+              <p className={styles.introduce__expression}>그룹원들과 실시간 대화를 나누세요.</p>
+              {/* 버튼 추가 혹은 버튼 없이 */}
+            </div>
+            <div className={styles.introduce__memory}>
+              <h1 className={styles.introduce__title}>추억</h1>
+              <p className={styles.introduce__expression}>그룹의 추억을 공유하고 남기세요.</p>
+              {/* 버튼 추가 혹은 버튼 없이 */}
+            </div>
+            <div className={styles.introduce__ranking}>
+              <h1 className={styles.introduce__title}>랭킹</h1>
+              <p className={styles.introduce__expression}>게임 결과를 기록하고 실시간 랭킹을 확인하세요.</p>
+              {/* 버튼 추가 혹은 버튼 없이 */}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
-
-
-
-
-// const Home = () => {
-//   const [init, setInit] = useState(false)
-//   const [userObj, setUserObj] = useContext(UserObjContext)
-
-//   useEffect(() => {
-//     authService.onAuthStateChanged((user) => {
-//       if(user) {
-//         const docRef = dbService.collection('whole_users').doc(user.uid)
-//         docRef.get().then((doc) => {
-//           if(doc.exists) {
-//             setUserObj({
-//               ...userObj,
-//               name: doc.data().name,
-//               displayName: doc.data().displayName,
-//               uid: doc.data().uid,
-//               photoURL: doc.data().photoURL,
-//               joinedDate: doc.data().joined_date,
-//               introduce: doc.data().introduce
-//             })
-//           }
-//         })
-//       }
-//       setInit(true)
-//     })
-//   }, [])
-
-//   return (
-//     <>
-//     <Head>
-//       <title>Play. &</title>
-//       <meta name="description" content="BBABBA의 홈입니다."></meta>
-//     </Head>
-//     {
-//     init ?
-//     <>
-//       <Top />
-//       <Main />
-//       <Footer />
-//     </>
-//     :
-//     <Segment className="loading">
-//       <Dimmer active>
-//         <Loader size="huge">Loading</Loader>
-//       </Dimmer>
-
-//       <Image src='/images/wireframe/short-paragraph.png' />
-//     </Segment>
-//     }
-//     </>
-//   )
-// }
 
 export default Home

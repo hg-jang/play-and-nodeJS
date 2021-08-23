@@ -21,10 +21,10 @@
 .main .introduce .introduce__title{margin: 40px 0 16px; background-color: rgba(16, 24, 32, .6); font-size: 32px; color: #ecf0f1; font-weight: 700; text-align: center; word-break: keep-all; transition: 0.7s; transform: translateY(60px);}
 .main .introduce .introduce__expression{padding: 32px 0; background-color: rgba(16, 24, 32, .6); font-size: 20px; color: #ecf0f1; text-align: center; word-break: keep-all; transition: 0.7s; transform: translateY(60px); opacity: 0;}
 
-.main .introduce .introduce__board{background-image: url(../../../public/img/board.jpg); background-position: center; background-repeat: no-repeat; background-size: cover;}
-.main .introduce .introduce__chat{background-image: url(../../../public/img/chat.jpg); background-position: center; background-repeat: no-repeat; background-size: cover;}
-.main .introduce .introduce__memory{background-image: url(../../../public/img/memory.jpg); background-position: center; background-repeat: no-repeat; background-size: cover;}
-.main .introduce .introduce__ranking{background-image: url(../../../public/img/ranking.jpg); background-position: center; background-repeat: no-repeat; background-size: cover;}
+.main .introduce .introduce__board{background-image: url(../../public/img/board.jpg); background-position: center; background-repeat: no-repeat; background-size: cover;}
+.main .introduce .introduce__chat{background-image: url(../../public/img/chat.jpg); background-position: center; background-repeat: no-repeat; background-size: cover;}
+.main .introduce .introduce__memory{background-image: url(../../public/img/memory.jpg); background-position: center; background-repeat: no-repeat; background-size: cover;}
+.main .introduce .introduce__ranking{background-image: url(../../public/img/ranking.jpg); background-position: center; background-repeat: no-repeat; background-size: cover;}
 
 @keyframes slide-up {
   0%{opacity: 0;}
