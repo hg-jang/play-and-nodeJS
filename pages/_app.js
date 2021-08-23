@@ -1,8 +1,8 @@
+import React, { useContext } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import '../styles/globals.css'
 import UserObjContext, { UserObjProvider } from '../src/contextAPI/UserObjContext'
-import { useContext } from 'react'
-// 글로벌 스타일을 여기에 임폴트
+import wrapper from '../store/configureStore'
 
 function MyApp({ Component, pageProps }) {
   const [userObj, setUserObj] = useContext(UserObjContext)
@@ -15,4 +15,4 @@ function MyApp({ Component, pageProps }) {
   )
 }
 
-export default MyApp
+export default wrapper.withRedux(MyApp)
