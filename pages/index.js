@@ -6,15 +6,12 @@ import { useEffect, useCallback, useState, useContext } from 'react'
 // import Footer from '../src/index/component/Footer'
 // import Top from '../src/index/component/Top'
 // import Main from '../src/index/component/Main'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import useInput from '../hooks/useInput'
 import { SIGN_UP_REQUEST } from '../reducers/auth'
-import Router from 'next/router'
 import { authService, dbService, fbase } from '../src/fbase'
 
 const Home = () => {
-
-  const { isSignedUp, signUpError } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
   const [email, onChangeEmail] = useInput('')
   const [password, onChangePassword] = useInput('')
@@ -27,33 +24,9 @@ const Home = () => {
     })
   }, [email, password])
 
-  // const onClick = useCallback(() => {
-  //   console.log(email, password)
-  //   authService.createUserWithEmailAndPassword(email, password)
-  //   .then((userCredential) => {
-  //     const user = userCredential.user
-  //     console.log(user);
-  //   })
-  // }, [email, password])
-
-  useEffect(() => {
-    if(isSignedUp) {
-      Router.replace('/')
-    }
-  }, [isSignedUp])
-
-  useEffect(() => {
-    if(signUpError) {
-      alert(signUpError)
-    }
-  }, [signUpError])
-
   return (
     <>
-      <h1>회원가입 폼</h1>
-      <input name="user-email" value={email} onChange={onChangeEmail} />
-      <input name="user-password" value={password} onChange={onChangePassword} />
-      <button onClick={onClick}>회원가입</button>
+      <p>인덱스  페이지입니다.</p>
     </>
   )
 }

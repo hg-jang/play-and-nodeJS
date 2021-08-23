@@ -34,7 +34,13 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isSigningUp: false,
-        currentUser: action.user,
+        currentUser: {
+          ...state.currentUser,
+          uid: action.user.uid,
+          email: action.user.email,
+          displayName: action.user.displayName,
+          photoURL: action.user.photoURL,
+        },
       }
     case SIGN_UP_FAILURE:
       return {
