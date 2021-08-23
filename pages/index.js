@@ -4,17 +4,6 @@ import styles from '../src/css/index.module.css'
 import classNames from 'classnames'
 
 const Home = () => {
-  // const dispatch = useDispatch()
-  // const [email, onChangeEmail] = useInput('')
-  // const [password, onChangePassword] = useInput('')
-
-  // const onClick = useCallback(() => {
-  //   console.log(email, password)
-  //   dispatch({
-  //     type: SIGN_UP_REQUEST,
-  //     data: { email: email, password: password },
-  //   })
-  // }, [email, password])
 
   return (
     <div className={styles.main}>
@@ -24,7 +13,7 @@ const Home = () => {
             <h1>'Play &'는 온라인 모임 공간을 찾던 테니스 동호인들을 위한 새로운 정답이 될&nbsp;것입니다.</h1>
             <h2>'Play &'와 함께 실력을 쌓아가고 새로운 만남을 이어나가세요.</h2>
           </div>
-          <div className={classNames({["button__index"]: true, [styles.button__index__main]: true})}><Link href="/public/public_main"><a>Get Started</a></Link></div>
+          <div className={classNames({["button__index"]: true, [styles.button__index__main]: true})}><Link href="/myGroups"><a>Get Started</a></Link></div>
         </div>
         <div className={styles.main__section}>
           <div className={styles.introduce}>

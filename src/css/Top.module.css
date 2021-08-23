@@ -3,10 +3,13 @@
 .header .logo{margin: 0; font-size: 32px; color: #3498db; letter-spacing: 2px;}
 
 .header ul{display: flex; align-items: center; position: relative;}
-.header ul li:nth-child(1) img{width: 40px; height: 40px; margin-right: 20px; border-radius: 50%;}
-.header ul li:nth-child(2){margin-right: 8px; font-size: 20px; color: #3498db; cursor: pointer;}
-.header ul .icon__setting{margin-right: 12px; font-size: 20px; color: #3498db; cursor: pointer;}
-.header ul .icon__setting:hover{animation: rotate 2s linear infinite;}
+
+.header .header__loggedIn li:nth-child(1) img{width: 40px; height: 40px; margin-right: 20px; border-radius: 50%;}
+.header .header__loggedIn li:nth-child(2){margin-right: 8px; font-size: 20px; color: #3498db; cursor: pointer;}
+.header .header__loggedIn .icon__setting{margin-right: 12px; font-size: 20px; color: #3498db; cursor: pointer;}
+.header .header__loggedIn .icon__setting:hover{animation: rotate 2s linear infinite;}
+
+.header .header__loggedOut li{margin-left: 16px;}
 
 @keyframes rotate {
   0%{transform: rotate(0deg);}
