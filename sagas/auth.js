@@ -8,7 +8,7 @@ import { authService, dbService } from '../src/fbase'
 
 
 function* logIn(action) {
-  try{
+  try {
     const auth = authService
     const result = yield call(
       [auth, auth.signInWithEmailAndPassword],
@@ -19,16 +19,18 @@ function* logIn(action) {
       type: LOG_IN_SUCCESS,
       user: result.user
     })
-  } catch(err) {
+  } catch(error) {
+    console.log('error', error);
+    console.log('error.data', error.data);
     yield put({
       type: LOG_IN_FAILURE,
-      error: err.response.data,
+      error: error.data,
     })
   }
 }
 
 function* logOut() {
-  try{
+  try {
     const auth = authService
     yield call(
       [auth, auth.signOut],
@@ -36,16 +38,16 @@ function* logOut() {
     yield put({
       type: LOG_OUT_SUCCESS,
     })
-  } catch(err) {
+  } catch(error) {
     yield put({
       type: LOG_OUT_FAILURE,
-      error: err.response.data,
+      error: err.data,
     })
   }
 }
 
 function* signUp(action) {
-  try{
+  try {
     const auth = authService
     yield call(
       [auth, auth.createUserWithEmailAndPassword],
@@ -55,10 +57,10 @@ function* signUp(action) {
     yield put({
       type: SIGN_UP_SUCCESS,
     })
-  } catch(err) {
+  } catch(error) {
     yield put({
       type: SIGN_UP_FAILURE,
-      error: err.response.data,
+      error: error.data,
     })
   }
 }

@@ -1,0 +1,9 @@
+.logIn{width: 100%; height: calc(100vh - 130px); display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #101820;}
+.logIn > h1{position: relative; top: -72px; font-size: 48px; color: #3498db;}
+
+.logIn > form{display: flex; flex-direction: column; justify-content: center; align-items: center;}
+
+.logIn > form > div{width: 300px; margin-top: 16px;}
+
+.logIn > form > div > label{position: relative; top: -4px; color: #fff;}
+.logIn > form > div > input{width: 100%; font-size: 20px; color: #fff; letter-spacing: 1.1px;}

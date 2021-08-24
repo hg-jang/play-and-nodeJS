@@ -69,13 +69,13 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isSigningUp: false,
-        signUpError: action.error,
+        logInError: action.error,
       }
     case LOG_OUT_REQUEST:
       return {
         ...state,
         isLoggingOut: true,
-        logInError: null,
+        logOutError: null,
       }
     case LOG_OUT_SUCCESS:
       return {
