@@ -4,21 +4,56 @@ import {
   LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE,
   LOG_OUT_REQUEST, LOG_OUT_SUCCESS, LOG_OUT_FAILURE,
 } from '../reducers/auth'
-import { fbase, authService, dbService } from '../src/fbase'
+import { authService, dbService } from '../src/fbase'
 
 
+function* logIn(action) {
+  try{
+    const auth = authService
+    const result = yield call(
+      [auth, auth.signInWithEmailAndPassword],
+      action.data.email,
+      action.data.password,
+    )
+    yield put({
+      type: LOG_IN_SUCCESS,
+      user: result.user
+    })
+  } catch(err) {
+    yield put({
+      type: LOG_IN_FAILURE,
+      error: err.response.data,
+    })
+  }
+}
+
+function* logOut() {
+  try{
+    const auth = authService
+    yield call(
+      [auth, auth.signOut],
+    )
+    yield put({
+      type: LOG_OUT_SUCCESS,
+    })
+  } catch(err) {
+    yield put({
+      type: LOG_OUT_FAILURE,
+      error: err.response.data,
+    })
+  }
+}
 
 function* signUp(action) {
   try{
-    const auth = fbase.auth()
-    const result = yield call(
+    const auth = authService
+    yield call(
       [auth, auth.createUserWithEmailAndPassword],
       action.data.email,
       action.data.password,
     )
     yield put({
       type: SIGN_UP_SUCCESS,
-      user: result.user
     })
   } catch(err) {
     yield put({
@@ -28,12 +63,20 @@ function* signUp(action) {
   }
 }
 
+function* watchLogIn() {
+  yield takeLatest(LOG_IN_REQUEST, logIn)
+}
+function* watchLogOut() {
+  yield takeLatest(LOG_OUT_REQUEST, logOut)
+}
 function* watchSignUp() {
   yield takeLatest(SIGN_UP_REQUEST, signUp)
 }
 
 export default function* authSaga() {
   yield all([
+    fork(watchLogIn),
+    fork(watchLogOut),
     fork(watchSignUp),
   ])
 }

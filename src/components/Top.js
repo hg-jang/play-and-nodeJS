@@ -4,6 +4,7 @@ import Link from 'next/link'
 import styles from '../css/Top.module.css'
 import classNames from 'classnames'
 import { Icon } from 'semantic-ui-react'
+import { LOG_OUT_REQUEST } from '../../reducers/auth'
 // import UserInfoModal from '../index/component/UserInfoModal'
 
 const Top = () => {
@@ -11,12 +12,12 @@ const Top = () => {
   const { isLoggedIn, currentUser } = useSelector((state) => state.auth)
   // const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const onClickLogIn = useCallback(() => {
-    console.log('log in');
-  }, [])
-
+  const defaultPhotoURL = '/img/default_profile.jpg'
+  
   const onClickLogOut = useCallback(() => {
-    console.log('log out');
+    dispatch({
+      type: LOG_OUT_REQUEST,
+    })
   }, [])
 
   return (
@@ -27,14 +28,14 @@ const Top = () => {
           {
           isLoggedIn ?
           <ul className={styles.header__loggedIn}>
-            <li><img src={currentUser.photoURL} alt="user profile" /></li>
-            <li className={styles.name}>{currentUser.displayName} 님,</li>
+            <li><img src={currentUser.photoURL ? currentUser.photoURL : defaultPhotoURL} alt="user profile" /></li>
+            <li className={styles.name}>{currentUser.displayName ? currentUser.displayName : '익명의 사용자'} 님,</li>
             <li><Icon name="setting" size="large" className={styles.icon__setting} /></li>
             <li className="button__index" onClick={onClickLogOut}>Log out</li>
           </ul>
           :
           <ul className={styles.header__loggedOut}>
-            <li className="button__index" onClick={onClickLogIn}>Log In</li>
+            <li className="button__index"><Link href="/logIn"><a>Log In</a></Link></li>
             <li className="button__index"><Link href="/signUp"><a>Sign Up</a></Link></li>
           </ul>
           }

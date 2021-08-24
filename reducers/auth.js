@@ -6,7 +6,6 @@ export const initialState = {
   isLoggedIn: false,
   logInError: null,
   isLoggingOut: false,  // 로그아웃
-  isLoggedOut: false,
   logOutError: null,
   currentUser: {
     displayName: '익명'
@@ -31,11 +30,33 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isSigningUp: true,
+        isSignedUp: false,
+        signUpError: null,
       }
     case SIGN_UP_SUCCESS:
       return {
         ...state,
         isSigningUp: false,
+        isSignedUp: true,
+      }
+    case SIGN_UP_FAILURE:
+      return {
+        ...state,
+        isSigningUp: false,
+        signUpError: action.error,
+      }
+    case LOG_IN_REQUEST:
+      return {
+        ...state,
+        isLoggingIn: true,
+        isLoggedIn: false,
+        logInError: null,
+      }
+    case LOG_IN_SUCCESS:
+      return {
+        ...state,
+        isLoggingIn: false,
+        isLoggedIn: true,
         currentUser: {
           ...state.currentUser,
           uid: action.user.uid,
@@ -44,29 +65,31 @@ const reducer = (state = initialState, action) => {
           photoURL: action.user.photoURL,
         },
       }
-    case SIGN_UP_FAILURE:
+    case LOG_IN_FAILURE:
       return {
         ...state,
+        isSigningUp: false,
         signUpError: action.error,
       }
-    // case LOG_IN_REQUEST:
-
-    //   break;
-    // case LOG_IN_SUCCESS:
-  
-    //   break;
-    // case LOG_IN_FAILURE:
-  
-    //   break;
-    // case LOG_OUT_REQUEST:
-
-    //   break;
-    // case LOG_OUT_SUCCESS:
-  
-    //   break;
-    // case LOG_OUT_FAILURE:
-  
-    //   break;
+    case LOG_OUT_REQUEST:
+      return {
+        ...state,
+        isLoggingOut: true,
+        logInError: null,
+      }
+    case LOG_OUT_SUCCESS:
+      return {
+        ...state,
+        isLoggingOut: false,
+        isLoggedIn: false,
+        currentUser: null,
+      }
+    case LOG_OUT_FAILURE:
+      return {
+        ...state,
+        isLoggingOut: false,
+        logOutError: action.error,
+      }
     default:
       return state
   }
