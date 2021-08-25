@@ -7,9 +7,7 @@ export const initialState = {
   logInError: null,
   isLoggingOut: false,  // 로그아웃
   logOutError: null,
-  currentUser: {
-    displayName: '익명'
-  },     // 현재 사용자
+  currentUser: null,    // 현재 사용자
 }
 
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST'

@@ -5,6 +5,8 @@ import Router from 'next/router'
 import useInput from '../../hooks/useInput'
 import styles from '../css/LogInForm.module.css'
 
+// 에러 처리 필요
+
 const LogInForm = () => {
   const dispatch = useDispatch()
   const { isLoggedIn, logInError } = useSelector((state) => state.auth)
@@ -41,7 +43,7 @@ const LogInForm = () => {
         </div>
         <div>
           <label htmlFor="user-password">비밀번호</label>
-          <input className="input__underline" name="user-password" value={password} onChange={onChangePassword} placeholder="비밀번호" />
+          <input className="input__underline" name="user-password" type="password" value={password} onChange={onChangePassword} placeholder="비밀번호" />
         </div>
         <div className="button__index" onClick={onClickLogIn}>로그인</div>
       </form>
