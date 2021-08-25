@@ -6,7 +6,7 @@ const PublicLayout = ({ children }) => {
   return (
     <>
       <Top />
-        { children }
+      { children }
       <Footer />
     </>
   )

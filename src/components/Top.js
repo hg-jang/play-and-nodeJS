@@ -30,7 +30,7 @@ const Top = () => {
           <ul className={styles.header__loggedIn}>
             <li><img src={currentUser.photoURL ? currentUser.photoURL : defaultPhotoURL} alt="user profile" /></li>
             <li className={styles.name}>{currentUser.displayName ? currentUser.displayName : '익명의 사용자'} 님,</li>
-            <li><Icon name="setting" size="large" className={styles.icon__setting} /></li>
+            <li><Link href="/profile/"><a><Icon name="setting" size="large" className={styles.icon__setting} /></a></Link></li>
             <li className="button__index" onClick={onClickLogOut}>Log out</li>
           </ul>
           :
