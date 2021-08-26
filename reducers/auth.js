@@ -1,3 +1,5 @@
+import Router from "next/router"
+
 export const initialState = {
   isSigningUp: false,  // 회원가입
   isSignedUp: false,
@@ -8,6 +10,11 @@ export const initialState = {
   isLoggingOut: false,  // 로그아웃
   logOutError: null,
   currentUser: null,    // 현재 사용자
+
+  isImageUploading: false,    // 이미지 업로드
+  isImageUploaded: false,
+  imageUploadError: null,
+  imageSrc: '',
 }
 
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST'
@@ -22,6 +29,10 @@ export const LOG_OUT_REQUEST = 'LOG_OUT_REQUEST'
 export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS'
 export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE'
 
+export const UPLOAD_IMAGE_REQUEST = 'UPLOAD_IMAGE_REQUEST'
+export const UPLOAD_IMAGE_SUCCESS = 'UPLOAD_IMAGE_SUCCESS'
+export const UPLOAD_IMAGE_FAILURE = 'UPLOAD_IMAGE_FAILURE'
+
 const reducer = (state = initialState, action) => {
   switch(action.type) {
     case SIGN_UP_REQUEST:
@@ -31,12 +42,14 @@ const reducer = (state = initialState, action) => {
         isSignedUp: false,
         signUpError: null,
       }
-    case SIGN_UP_SUCCESS:
+    case SIGN_UP_SUCCESS: {
+      Router.push('/')
       return {
         ...state,
         isSigningUp: false,
         isSignedUp: true,
       }
+    }
     case SIGN_UP_FAILURE:
       return {
         ...state,
@@ -69,12 +82,15 @@ const reducer = (state = initialState, action) => {
         isSigningUp: false,
         logInError: action.error,
       }
-    case LOG_OUT_REQUEST:
+      case LOG_OUT_REQUEST: {
+      Router.push('/')
       return {
         ...state,
         isLoggingOut: true,
+        isLoggedIn: true,
         logOutError: null,
       }
+    }
     case LOG_OUT_SUCCESS:
       return {
         ...state,
@@ -87,6 +103,27 @@ const reducer = (state = initialState, action) => {
         ...state,
         isLoggingOut: false,
         logOutError: action.error,
+      }
+    case UPLOAD_IMAGE_REQUEST:
+      return {
+        ...state,
+        isImageUploading: true,
+        isImageUploaded: false,
+        imageUploadError: null,
+      }
+    case UPLOAD_IMAGE_SUCCESS:
+      console.log(action.data)
+      // return {
+      //   ...state,
+      //   isImageUploading: false,
+      //   isImageUploaded: true,
+      //   imageSrc: action.src,
+      // }
+    case UPLOAD_IMAGE_FAILURE:
+      return {
+        ...state,
+        isImageUploading: false,
+        imageUploadError: action.error,
       }
     default:
       return state
