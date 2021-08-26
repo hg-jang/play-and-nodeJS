@@ -5,8 +5,10 @@ import styles from '../css/profile.module.css'
 const ProfileLayout = ({ children }) => {
   return (
     <div className={styles.profile}>
-      <ProfileNav />
-      { children }
+      <div className={styles.profile_container}>
+        <ProfileNav />
+        { children }
+      </div>
     </div>
   )
 }
