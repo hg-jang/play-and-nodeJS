@@ -1,13 +1,14 @@
 import { all, fork, takeLatest, put, call } from 'redux-saga/effects'
+import { authService, storageService } from '../src/fbase'
+import path from 'path'
 import {
   SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE,
   LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE,
   LOG_OUT_REQUEST, LOG_OUT_SUCCESS, LOG_OUT_FAILURE,
   UPLOAD_IMAGE_REQUEST, UPLOAD_IMAGE_SUCCESS, UPLOAD_IMAGE_FAILURE,
+  DOWNLOAD_IMAGE_URL_REQUEST, DOWNLOAD_IMAGE_URL_SUCCESS, DOWNLOAD_IMAGE_URL_FAILURE,
+  PROFILE_SAVE_REQUEST, PROFILE_SAVE_SUCCESS, PROFILE_SAVE_FAILURE,
 } from '../reducers/auth'
-import { authService, storageService } from '../src/fbase'
-import path from 'path'
-
 
 function* logIn(action) {
   try {
@@ -81,7 +82,7 @@ function* uploadImage(action) {
       imageRef,
     )
 
-    const result = yield call(
+    yield call(
       [childRef, childRef.put],
       action.data.file,
     )
@@ -90,12 +91,77 @@ function* uploadImage(action) {
       type: UPLOAD_IMAGE_SUCCESS,
     })
     yield put({
-      type: DOWNLOAD_IMAGE,
-      // data: 이미지 다운로드
+      type: DOWNLOAD_IMAGE_URL_REQUEST,
+      data: imageRef,
     })
   } catch(error) {
     yield put({
       type: UPLOAD_IMAGE_FAILURE,
+      error: error.message,
+    })
+  }
+}
+
+function* downloadImageURL(action) {
+  try {
+    const storageRef = storageService.ref()
+    const childRef = yield call(
+      [storageRef, storageRef.child],
+      action.data,
+    )
+    const result = yield call(
+      [childRef, childRef.getDownloadURL],
+    )
+    yield put({
+      type: DOWNLOAD_IMAGE_URL_SUCCESS,
+      data: result,
+    })
+  } catch(error) {
+    yield put({
+      type: DOWNLOAD_IMAGE_URL_FAILURE,
+      error: error.message,
+    })
+  }
+}
+
+function* profileSave(action) {
+  try {
+    const user = authService.currentUser
+    if(action.data.displayName === '') {
+      yield call(
+        [user, user.updateProfile],
+        {
+          photoURL: action.data.photoURL,
+        }
+      )
+    }
+    else if(action.data.photoURL === '') {
+      yield call(
+        [user, user.updateProfile],
+        {
+          displayName: action.data.displayName,
+        }
+      )
+    }
+    else {
+      yield call(
+        [user, user.updateProfile],
+        {
+          displayName: action.data.displayName,
+          photoURL: action.data.photoURL,
+        },
+      )
+    }
+    yield put({
+      type: PROFILE_SAVE_SUCCESS,
+      data: {
+        displayName: action.data.displayName !== '' ? action.data.displayName : null,
+        photoURL: action.data.photoURL !== '' ? action.data.photoURL : null,
+      }
+    })
+  } catch(error) {
+    yield put({
+      type: PROFILE_SAVE_FAILURE,
       error: error.message,
     })
   }
@@ -113,6 +179,12 @@ function* watchSignUp() {
 function* watchUploadImage() {
   yield takeLatest(UPLOAD_IMAGE_REQUEST, uploadImage)
 }
+function* watchDownloadImageURL() {
+  yield takeLatest(DOWNLOAD_IMAGE_URL_REQUEST, downloadImageURL)
+}
+function* watchProfileSave() {
+  yield takeLatest(PROFILE_SAVE_REQUEST, profileSave)
+}
 
 export default function* authSaga() {
   yield all([
@@ -120,5 +192,7 @@ export default function* authSaga() {
     fork(watchLogOut),
     fork(watchSignUp),
     fork(watchUploadImage),
+    fork(watchDownloadImageURL),
+    fork(watchProfileSave),
   ])
 }

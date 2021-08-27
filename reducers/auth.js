@@ -14,6 +14,12 @@ export const initialState = {
   isImageUploading: false,    // 이미지 업로드
   isImageUploaded: false,
   imageUploadError: null,
+  isImageURLDownloading: false,    // 이미지 경로 다운로드
+  isImageURLDownloaded: false,
+  imageURLDownloadError: null,
+  isProfileSaving: false,         // 프로필 저장
+  isProfileSaved: false,
+  profileSaveError: null,
   imageSrc: '',
 }
 
@@ -32,6 +38,14 @@ export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE'
 export const UPLOAD_IMAGE_REQUEST = 'UPLOAD_IMAGE_REQUEST'
 export const UPLOAD_IMAGE_SUCCESS = 'UPLOAD_IMAGE_SUCCESS'
 export const UPLOAD_IMAGE_FAILURE = 'UPLOAD_IMAGE_FAILURE'
+
+export const DOWNLOAD_IMAGE_URL_REQUEST = 'DOWNLOAD_IMAGE_URL_REQUEST'
+export const DOWNLOAD_IMAGE_URL_SUCCESS = 'DOWNLOAD_IMAGE_URL_SUCCESS'
+export const DOWNLOAD_IMAGE_URL_FAILURE = 'DOWNLOAD_IMAGE_URL_FAILURE'
+
+export const PROFILE_SAVE_REQUEST = 'PROFILE_SAVE_REQUEST'
+export const PROFILE_SAVE_SUCCESS = 'PROFILE_SAVE_SUCCESS'
+export const PROFILE_SAVE_FAILURE = 'PROFILE_SAVE_FAILURE'
 
 const reducer = (state = initialState, action) => {
   switch(action.type) {
@@ -112,18 +126,60 @@ const reducer = (state = initialState, action) => {
         imageUploadError: null,
       }
     case UPLOAD_IMAGE_SUCCESS:
-      console.log(action.data)
-      // return {
-      //   ...state,
-      //   isImageUploading: false,
-      //   isImageUploaded: true,
-      //   imageSrc: action.src,
-      // }
+      return {
+        ...state,
+        isImageUploading: false,
+        isImageUploaded: true,
+      }
     case UPLOAD_IMAGE_FAILURE:
       return {
         ...state,
         isImageUploading: false,
         imageUploadError: action.error,
+      }
+    case DOWNLOAD_IMAGE_URL_REQUEST:
+      return {
+        ...state,
+        isImageURLDownloading: true,
+        isImageURLDownloaded: false,
+        imageURLDownloadError: null,
+      }
+    case DOWNLOAD_IMAGE_URL_SUCCESS:
+      return {
+        ...state,
+        isImageURLDownloading: false,
+        isImageURLDownloaded: true,
+        imageSrc: action.data,
+      }
+    case DOWNLOAD_IMAGE_URL_FAILURE:
+      return {
+        ...state,
+        isImageURLDownloading: false,
+        imageURLDownloadError: action.error,
+      }
+    case PROFILE_SAVE_REQUEST:
+      return {
+        ...state,
+        isProfileSaving: true,
+        isProfileSaved: false,
+        profileSaveError: null,
+      }
+    case PROFILE_SAVE_SUCCESS:
+      return {
+        ...state,
+        isProfileSaving: false,
+        isProfileSaved: true,
+        currentUser: {
+          ...state.currentUser,
+          displayName: action.data.displayName,
+          photoURL: action.data.photoURL,
+        }
+      }
+    case PROFILE_SAVE_FAILURE:
+      return {
+        ...state,
+        isProfileSaving: false,
+        profileSaveError: action.error,
       }
     default:
       return state
