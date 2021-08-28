@@ -126,37 +126,21 @@ function* downloadImageURL(action) {
 
 function* profileSave(action) {
   try {
-    const user = fbaeAuth.currentUser
-    if(action.data.displayName === '') {
-      yield call(
-        [user, user.updateProfile],
-        {
-          photoURL: action.data.photoURL,
-        }
-      )
-    }
-    else if(action.data.photoURL === '') {
-      yield call(
-        [user, user.updateProfile],
-        {
-          displayName: action.data.displayName,
-        }
-      )
-    }
-    else {
-      yield call(
-        [user, user.updateProfile],
-        {
-          displayName: action.data.displayName,
-          photoURL: action.data.photoURL,
-        },
-      )
-    }
+    const user = fbaseAuth.currentUser
+    
+    yield call(
+      [user, user.updateProfile],
+      {
+        displayName: action.data.displayName !== '' ? action.data.displayName : user.displayName,
+        photoURL: action.data.photoURL !== '' ? action.data.photoURL : user.photoURL,
+      },
+    )
+    
     yield put({
       type: PROFILE_SAVE_SUCCESS,
       data: {
-        displayName: action.data.displayName !== '' ? action.data.displayName : null,
-        photoURL: action.data.photoURL !== '' ? action.data.photoURL : null,
+        displayName: action.data.displayName !== '' ? action.data.displayName : user.displayName,
+        photoURL: action.data.photoURL !== '' ? action.data.photoURL : user.photoURL,
       }
     })
   } catch(error) {

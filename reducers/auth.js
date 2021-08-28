@@ -1,4 +1,5 @@
 import Router from "next/router"
+import { fbaseFirestore } from "../src/fbase"
 
 export const initialState = {
   isSigningUp: false,  // 회원가입
@@ -97,7 +98,7 @@ const reducer = (state = initialState, action) => {
         logInError: action.error,
       }
       case LOG_OUT_REQUEST: {
-      Router.push('/')
+      Router.replace('/')
       return {
         ...state,
         isLoggingOut: true,
@@ -164,7 +165,28 @@ const reducer = (state = initialState, action) => {
         isProfileSaved: false,
         profileSaveError: null,
       }
-    case PROFILE_SAVE_SUCCESS:
+    case PROFILE_SAVE_SUCCESS: {
+      // for Firestore Database
+      fbaseFirestore.collection('whole users').doc(state.currentUser.uid).set({
+        displayName: action.data.displayName,
+        photoURL: action.data.photoURL,
+      }, { merge: true })
+
+      fbaseFirestore.collection('whole users').doc(state.currentUser.uid).collection('joining groups').get().then((groups) => {
+        groups.forEach((group) => {
+          // update in admins
+          fbaseFirestore.collection(group.data().groupName).doc('group data').collection('admins').doc(state.currentUser.uid).set({
+            displayName: action.data.displayName,
+          }, { merge: true })
+        
+          // update in members
+          fbaseFirestore.collection(group.data().groupName).doc('group data').collection('members').doc(state.currentUser.uid).set({
+            displayName: action.data.displayName,
+            photoURL: action.data.photoURL,
+          }, { merge: true })
+        })
+      })
+      Router.replace('/')
       return {
         ...state,
         isProfileSaving: false,
@@ -175,6 +197,7 @@ const reducer = (state = initialState, action) => {
           photoURL: action.data.photoURL,
         }
       }
+    }
     case PROFILE_SAVE_FAILURE:
       return {
         ...state,
