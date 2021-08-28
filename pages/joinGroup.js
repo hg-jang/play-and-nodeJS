@@ -1,9 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import UserObjContext from "../../src/contextAPI/UserObjContext"
-import { dbService } from "../../src/fbase"
+import { dbService } from "../src/fbase"
 import classNames from 'classnames'
-import Footer from "../../src/index/component/Footer"
-import Top from "../../src/index/component/Top"
 import styles from '../../src/public/css/public_joinGroup.module.css'
 
 const public_joinGroup = () => {
@@ -66,7 +64,6 @@ const public_joinGroup = () => {
 
   return (
     <>
-      <Top />
       <div className={styles.joinGroup}>
         <div className={classNames({["container"]: true, [styles.container__public_joinGroup]: true})}>
           <input type="text" onChange={traceInputChange} value={groupFilter} placeholder="원하는 그룹명을 입력하세요." />
@@ -75,7 +72,6 @@ const public_joinGroup = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   )
 }
