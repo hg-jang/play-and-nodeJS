@@ -1,5 +1,5 @@
 import { all, fork, takeLatest, put, call } from 'redux-saga/effects'
-import { authService, storageService } from '../src/fbase'
+import { fbaseAuth, fbaseStorage } from '../src/fbase'
 import path from 'path'
 import {
   SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE,
@@ -12,7 +12,7 @@ import {
 
 function* logIn(action) {
   try {
-    const auth = authService
+    const auth = fbaseAuth
     const result = yield call(
       [auth, auth.signInWithEmailAndPassword],
       action.data.email,
@@ -35,7 +35,7 @@ function* logIn(action) {
 
 function* logOut() {
   try {
-    const auth = authService
+    const auth = fbaseAuth
     yield call(
       [auth, auth.signOut],
     )
@@ -52,7 +52,7 @@ function* logOut() {
 
 function* signUp(action) {
   try {
-    const auth = authService
+    const auth = fbaseAuth
     yield call(
       [auth, auth.createUserWithEmailAndPassword],
       action.data.email,
@@ -71,7 +71,7 @@ function* signUp(action) {
 
 function* uploadImage(action) {
   try {
-    const storageRef = storageService.ref()
+    const storageRef = fbaseStorage.ref()
 
     const ext = path.extname(action.data.src)              // 확장자 추출
     const basename = path.basename(action.data.src, ext)   // 확장자 뺀 이름 추출
@@ -104,7 +104,7 @@ function* uploadImage(action) {
 
 function* downloadImageURL(action) {
   try {
-    const storageRef = storageService.ref()
+    const storageRef = fbaseStorage.ref()
     const childRef = yield call(
       [storageRef, storageRef.child],
       action.data,
@@ -126,7 +126,7 @@ function* downloadImageURL(action) {
 
 function* profileSave(action) {
   try {
-    const user = authService.currentUser
+    const user = fbaeAuth.currentUser
     if(action.data.displayName === '') {
       yield call(
         [user, user.updateProfile],
