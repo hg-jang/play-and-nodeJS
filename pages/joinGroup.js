@@ -1,78 +1,76 @@
-import { useContext, useEffect, useState } from "react"
-import UserObjContext from "../../src/contextAPI/UserObjContext"
-import { dbService } from "../src/fbase"
+import React, { useEffect, useState } from "react"
+import { fbaseFirestore } from "../src/fbase"
+import { useSelector } from "react-redux"
+import useInput from "../hooks/useInput"
+import styles from '../src/css/joinGroup.module.css'
 import classNames from 'classnames'
-import styles from '../../src/public/css/public_joinGroup.module.css'
 
 const public_joinGroup = () => {
-  const [userObj, setUserObj] = useContext(UserObjContext)
+  const { currentUser } = useSelector((state) => state.auth)
+  const [filter, onChnageInput] = useInput('')
+  
   const [wholeGroups, setWholeGroups] = useState([])
-  const [groupFilter, setGroupFilter] = useState('')
-  const [mapGroupList, setMapGroupList] = useState([])
+  const [filteredGroups, setFilteredGroups] = useState([])
 
-  function requestJoin(e) {
-    const memberDocRef = dbService.collection(e.target.dataset.group_name).doc('group_data').collection('members').doc(userObj.uid)
-    const awaitorDocRef = dbService.collection(e.target.dataset.group_name).doc('group_data').collection('awaitors').doc(userObj.uid)
+  function onClickJoin(e) {
+    const memberDocRef = fbaseFirestore.collection(e.target.dataset.group).doc('group data').collection('members').doc(currentUser.uid)
+    const awaitorDocRef = fbaseFirestore.collection(e.target.dataset.group).doc('group data').collection('awaitors').doc(currentUser.uid)
 
-    memberDocRef.get().then((doc) => {
-      if(doc.exists) {
+    memberDocRef.get()
+    .then((member) => {
+      if(member.exists) {
         // 신청한 사람의 uid가 members에 존재 할 경우
         alert('이미 가입한 그룹입니다. :D')
       } else {
         // 신청한 사람의 uid가 members에 존재 하지 않을 경우
         awaitorDocRef.set({
-          name: userObj.name,
-          displayName: userObj.displayName,
-          photoURL: userObj.photoURL,
-          introduce: userObj.introduce,
-          uid: userObj.uid
+          displayName: currentUser.displayName,
+          photoURL: currentUser.photoURL,
+          uid: currentUser.uid
         })
       }
     })
   }
 
-  const groupSmallCard = mapGroupList.map((el, index) => 
-    <div className={styles.card} key={index}>
-      <h1 className={styles.group_name}>{el.group_name}</h1>
-      <h2 className={styles.group_introduce}>{el.group_introduce}</h2>
-      <div onClick={requestJoin} data-group_name={el.group_name}>가입 신청</div>
-    </div>
-  )
-
-  function traceInputChange(e) {
-    setGroupFilter(e.target.value)
-  }
-
-  useEffect(() => {
-    dbService.collection('whole_groups').get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
+  const getWholeGroups = () => {
+    fbaseFirestore.collection('whole groups').get()
+    .then((groups) => {
+      groups.forEach((group) => {
         setWholeGroups(wholeGroups => [...wholeGroups, {
-          group_name: doc.data().group_name,
-          group_introduce: doc.data().group_introduce
+          groupName: group.data().groupName,
+          groupIntroduce: group.data().groupIntroduce
         }])
       })
     })
+  }
+
+  useEffect(() => {
+    getWholeGroups()
   }, [])
 
   useEffect(() => {
-    if(groupFilter) {
-      setMapGroupList(wholeGroups.filter(el => el.group_name.includes(groupFilter)))
+    if(filter) {
+      setFilteredGroups(wholeGroups.filter(el => el.groupName.includes(filter)))
     } else {
-      setMapGroupList([])
+      setFilteredGroups([])
     }
-  }, [groupFilter])
+  }, [filter])
 
   return (
-    <>
-      <div className={styles.joinGroup}>
-        <div className={classNames({["container"]: true, [styles.container__public_joinGroup]: true})}>
-          <input type="text" onChange={traceInputChange} value={groupFilter} placeholder="원하는 그룹명을 입력하세요." />
-          <div>
-            {groupSmallCard}
-          </div>
+    <div className={styles.joinGroup}>
+      <div className={classNames({["container"]: true, [styles.container__public_joinGroup]: true})}>
+        <input type="text" onChange={onChnageInput} value={filter} placeholder="원하는 그룹명을 입력하세요." />
+        <div>
+          {filteredGroups.map((el, index) => 
+            <div className={styles.card} key={index}>
+              <h1 className={styles.group_name}>{el.groupName}</h1>
+              <h2 className={styles.group_introduce}>{el.groupIntroduce}</h2>
+              <div onClick={onClickJoin} data-group={el.groupName}>가입 신청</div>
+            </div>
+          )}
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
