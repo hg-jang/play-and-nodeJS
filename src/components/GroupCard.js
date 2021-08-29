@@ -13,7 +13,7 @@ const GroupCard = ({ group, index }) => {
         <img src={defaultSrc} alt="team profile" />
         {group.isAdmin === true ? <Link href={`/admin/${group.groupName}`}><a><Icon fitted className={styles.setting} name='setting' size='large' /></a></Link> : <></>}
       </div>
-      <Link href={`/public/${group.group_name}`}><a><h1 className={styles.team_name}>{group.groupName}</h1></a></Link>
+      <Link href={`/group/${group.groupName}`}><a><h1 className={styles.team_name}>{group.groupName}</h1></a></Link>
       <h2 className={styles.group_introduce}>{group.groupIntroduce}</h2>
       <ul className={styles.group_info}>
         <li className={styles.created_date}>

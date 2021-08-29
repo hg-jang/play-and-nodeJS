@@ -1,87 +1,103 @@
-import { useEffect, useState } from 'react'
-import { dbService } from '../../src/fbase'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
-import styles from '../../src/public/css/group_main.module.css'
-import Nav from "../../src/public/component/Nav"
-import Ranking from "../../src/public/component/Ranking"
-import MemberList from "../../src/public/component/MemberList"
-import Community from "../../src/public/component/Community"
-import RecentGame from "../../src/public/component/RecentGame"
-import Ad from "../../src/public/component/Ad"
+import { fbaseFirestore } from '../../src/fbase'
+// import styles from '../../src/public/css/group_main.module.css'
+// import Nav from "../../src/public/component/Nav"
+// import Ranking from "../../src/public/component/Ranking"
+// import MemberList from "../../src/public/component/MemberList"
+// import Community from "../../src/public/component/Community"
+// import RecentGame from "../../src/public/component/RecentGame"
+// import Ad from "../../src/public/component/Ad"
+import { SET_GAMES } from '../../reducers/group'
 
-const group_main = () => {
+const group_index = () => {
   const router = useRouter()
   const { group } = router.query
   
-  const groupName = group
-  const [content, setContent] = useState('community')
-  const [groupPlayers, setGroupPlayers] = useState([]);
-  const [wholeGames, setWholeGames] = useState([]);
+  const dispatch = useDispatch()
+  const { currentGroup } = useSelector((state) => state.group)
 
-  async function getGroupPlayers() {
-    const querySnapshot = await dbService.collection(group).doc('group_data').collection('players').get()
-    querySnapshot.forEach(doc => {
-      const singlePlayerObject = {
-        name: doc.data().name,
-        photoURL: doc.data().photoURL,
-        joined_date: doc.data().joined_date,
-        rating: doc.data().rating,
-        game_all: doc.data().game_all,
-        game_win: doc.data().game_win,
-        game_lose: doc.data().game_lose,
-        status: doc.data().status,
-        start_rating: doc.data().start_rating,
-        introduce: doc.data().introduce
-      }
-      setGroupPlayers(groupPlayers => [...groupPlayers, singlePlayerObject])
+  
+  // const groupName = group
+  // const [content, setContent] = useState('community')
+  // const [groupPlayers, setGroupPlayers] = useState([]);
+  // const [wholeGames, setWholeGames] = useState([]);
+
+  const getGames = () => {
+    let gamesArr = []
+    fbaseFirestore.collection(group).doc('group data').collection('games').get()
+    .then((games) => {
+      games.forEach((game) => {
+        console.log('2 :', game.data());
+        const gameObj = {
+          winnerRatingAfter: game.data().winnerRatingAfter,
+          loserRatingAfter: game.data().loserRatingAfter,
+          winners: game.data().winners,
+          losers: game.data().losers,
+          ratingChange: game.data().ratingChange,
+          percentage: game.data().percentage,
+          date: game.data().date,
+          time: game.data().writeTime,
+          id: `${game.data().date}-${game.data().writeTime}`,
+        }
+        gamesArr = gamesArr.concat(gameObj)
+      })
+    })
+    .then(() => {
+      dispatch({
+        type: SET_GAMES,
+        data: gamesArr,
+      })
     })
   }
 
-  async function getWholeGames() {
-    const querySnapshot = await dbService.collection(group).doc('group_data').collection('games').orderBy("write_time","desc").get()
-    querySnapshot.forEach(doc => {
-      const singleGameObject = {
-        winners: doc.data().winners,
-        losers: doc.data().losers,
-        ratingChange: doc.data().ratingChange,
-        percentage: doc.data().percentage,
-        date: doc.data().date,
-        time: doc.data().write_time,
-        id: `${doc.data().date}-${doc.data().write_time}`,
-        winnerRatingAfter: doc.data().winnerRatingAfter,
-        loserRatingAfter: doc.data().loserRatingAfter
-      }
-      setWholeGames(wholeGames => [...wholeGames, singleGameObject]);
-    })
-  }
+  // const getMembers = () => {
+  //   let membersArr = []
+
+  //   dbService.collection(group).doc('group data').collection('members').get()
+  //   .then((members) => {
+  //     members.forEach((member) => {
+  //       const memberObj = {
+
+  //       }
+  //     })
+  //   })
+  // }
+
 
   useEffect(() => {
     if(router.query.group) {
-      getGroupPlayers()
-      getWholeGames()
+      getGames()
+      getMembers()
     }
   }, [router])
 
+  useEffect(() => {
+    console.log('페이지 : ', currentGroup);
+  }, [currentGroup])
+
   return (
-    <div className={styles.publicContainer}>
-      <Nav setContent={setContent} />
-      <div className={styles.teamContainer}>
-        {content === 'ranking' && <Ranking groupPlayers={groupPlayers} />}
-        {content === 'member list' && <MemberList groupName={groupName} groupPlayers={groupPlayers} />}
-        {content === 'community' && <Community groupName={groupName}/>}
-      </div>
-      {content !== 'community' &&
-      <div className={styles.aside}>
-        <div className={styles.aside1}>
-          <RecentGame wholeGames={wholeGames} />
-        </div>
-        <div className={styles.aside2}>
-          <Ad />
-        </div>
-      </div>
-      }
-    </div>
+    <p>그룹 메인</p>
+    // <div className={styles.publicContainer}>
+    //   <Nav setContent={setContent} />
+    //   <div className={styles.teamContainer}>
+    //     {content === 'ranking' && <Ranking groupPlayers={groupPlayers} />}
+    //     {content === 'member list' && <MemberList groupName={groupName} groupPlayers={groupPlayers} />}
+    //     {content === 'community' && <Community groupName={groupName}/>}
+    //   </div>
+    //   {content !== 'community' &&
+    //   <div className={styles.aside}>
+    //     <div className={styles.aside1}>
+    //       <RecentGame wholeGames={wholeGames} />
+    //     </div>
+    //     <div className={styles.aside2}>
+    //       <Ad />
+    //     </div>
+    //   </div>
+    //   }
+    // </div>
   )
 }
 
-export default group_main
+export default group_index

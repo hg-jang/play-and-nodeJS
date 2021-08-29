@@ -2,6 +2,7 @@ import { HYDRATE } from "next-redux-wrapper";
 import { combineReducers } from "redux";
 
 import auth from './auth'
+import group from './group'
 
 const rootReducer = combineReducers({
   index: (state = {}, action) => {
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
     }
   },
   auth,
+  group,
 })
 
 export default rootReducer
