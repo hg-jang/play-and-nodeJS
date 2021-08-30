@@ -5,14 +5,7 @@ export const initialState = {
 
 export const SET_GAMES = 'SET_GAMES'
 export const SET_MEMBERS = 'SET_MEMBERS'
-export const SET_CONTENT = 'SET_CONTENT'
-
-export const onClickSetContent = (e) => {
-  return {
-    type: SET_CONTENT,
-    data: e.target.dataset.content,
-  }
-}
+export const CHANGE_CONTENT = 'CHANGE_CONTENT'
 
 const reducer = (state = initialState, action) => {
   switch(action.type) {
@@ -32,7 +25,7 @@ const reducer = (state = initialState, action) => {
           members: action.data,
         }
       }
-    case SET_CONTENT:
+    case CHANGE_CONTENT:
       return {
         ...state,
         content: action.data,
