@@ -5,8 +5,8 @@ import { fbaseFirestore } from '../../src/fbase'
 import Ranking from "../../src/components/Ranking"
 import MemberList from "../../src/components/MemberList"
 import Community from "../../src/components/Community"
-// import RecentGame from "../../src/components/RecentGame"
-// import Ad from "../../src/public/component/Ad"
+import GameRecords from "../../src/components/GameRecords"
+import Ad from "../../src/components/Ad"
 import styles from '../../src/css/group.module.css'
 import { SET_GAMES, SET_MEMBERS } from '../../reducers/group'
 
@@ -91,16 +91,16 @@ const group_index = () => {
         {content === 'ranking' && <Ranking />}
         {content === 'member list' && <MemberList />}
       </div>
-      {/* {content !== 'community' &&
+      {content !== 'community' &&
       <div className={styles.asides}>
         <div className={styles.aside1}>
-          <RecentGame wholeGames={wholeGames} />
+          <GameRecords games={currentGroup.games} />
         </div>
         <div className={styles.aside2}>
           <Ad />
         </div>
       </div>
-      } */}
+      }
     </>
   )
 }
