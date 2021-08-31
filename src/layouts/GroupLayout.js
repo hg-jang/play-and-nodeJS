@@ -1,10 +1,13 @@
+import React from 'react'
+import styles from '../css/group.module.css'
+import Nav from "../components/Nav"
+
 const GroupLayout = ({ children }) => {
   return (
-    <>
-      <p>Group Layout top</p>
-        { children }
-      <p>Group Layout bot</p>
-    </>
+    <div className={styles.group_container}>
+      <Nav />
+      { children }
+    </div>
   )
 }
 
