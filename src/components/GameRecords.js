@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Icon } from 'semantic-ui-react'
 
-function getRecentGamesStructure(arr) {
+const getGameRecordForm = (arr) => {
   return arr.slice(0, 5).map((el, index) => (
     <div className="game" key={index}>
       <div className="top">{el.date.slice(0, 4)}년 {el.date.slice(4, 6)}월 {el.date.slice(6)}일</div>
@@ -66,30 +66,23 @@ function getRecentGamesStructure(arr) {
   ))
 }
 
-function noGamesStructure() {
-  return (
-    <div className="no_game">
-      <span>경기 기록이 없습니다.</span>
-    </div>
-  )
-}
-
-const RecentGame = ({ wholeGames }) => {
-  const recentGames = useMemo(() => getRecentGamesStructure(wholeGames), [wholeGames])
-  const noGames = useMemo(() => noGamesStructure(), [])
+const GameRecords = ({ games }) => {
+  const gameRecords = useMemo(() => getGameRecordForm(games), [games])
   
   return (
     <>
       {
-      wholeGames.length > 0 ?
+      games.length > 0 ?
         <div className="games">
-          {recentGames}
+          {gameRecords}
         </div>
       :
-        noGames
+      <div className="no_game">
+        <span>경기 기록이 없습니다.</span>
+      </div>
       }
     </>
   )
 }
 
-export default RecentGame
+export default GameRecords
