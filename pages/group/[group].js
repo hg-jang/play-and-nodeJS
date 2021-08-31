@@ -2,9 +2,9 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { fbaseFirestore } from '../../src/fbase'
-// import Ranking from "../../src/components/Ranking"
-// import MemberList from "../../src/components/MemberList"
-// import Community from "../../src/components/Community"
+import Ranking from "../../src/components/Ranking"
+import MemberList from "../../src/components/MemberList"
+import Community from "../../src/components/Community"
 // import RecentGame from "../../src/components/RecentGame"
 // import Ad from "../../src/public/component/Ad"
 import styles from '../../src/css/group.module.css'
@@ -86,12 +86,12 @@ const group_index = () => {
 
   return (
     <>
-      {/* <div className={styles.contents}>
+      <div className={styles.contents}>
         {content === 'community' && <Community />}
         {content === 'ranking' && <Ranking />}
         {content === 'member list' && <MemberList />}
       </div>
-      {content !== 'community' &&
+      {/* {content !== 'community' &&
       <div className={styles.asides}>
         <div className={styles.aside1}>
           <RecentGame wholeGames={wholeGames} />
