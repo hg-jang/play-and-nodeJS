@@ -80,10 +80,6 @@ const group_index = () => {
     }
   }, [router])
 
-  useEffect(() => {
-    console.log('가져온 그룹 정보 : ', currentGroup);
-  }, [currentGroup])
-
   return (
     <>
       <div className={styles.contents}>
