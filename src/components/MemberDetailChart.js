@@ -1,25 +1,24 @@
-import { useEffect } from 'react'
+import React from 'react'
 import { Line } from 'react-chartjs-2'
 
-const MemberDetailChart = ({ chartMode, period, playersGame, playerDetailTarget }) => {
-  console.log(playersGame);
+const MemberDetailChart = ({ chartType, period, games, detailedMember }) => {
   // userMatch에서 rating 가져오기
-  function getRating(STD_Date) {
-    const wanted = playersGame.find(el => el.date - STD_Date <= 0) ? playersGame.find(el => el.date - STD_Date <= 0) : playerDetailTarget.start_rating
+  const getRating = (date) => {
+    const game = games.find(el => el.date - date <= 0) ? games.find(el => el.date - date <= 0) : detailedMember.startRating
 
-    if(typeof wanted === 'number' || typeof wanted === 'string') {
-      return Number(wanted)
-    } else if(wanted.winners.includes(playerDetailTarget.name)) {
-      return wanted.winnerRatingAfter[wanted.winners.indexOf(playerDetailTarget.name)]
-    } else if(wanted.losers.includes(playerDetailTarget.name)) {
-      return wanted.loserRatingAfter[wanted.losers.indexOf(playerDetailTarget.name)]
+    if(typeof game === 'number' || typeof game === 'string') {
+      return Number(game)
+    } else if(game.winners.includes(detailedMember.displayName)) {
+      return game.winnerRatingAfter[game.winners.indexOf(detailedMember.displayName)]
+    } else if(game.losers.includes(detailedMember.displayName)) {
+      return game.loserRatingAfter[game.losers.indexOf(detailedMember.displayName)]
     }
   }
 
-  function getDate(STD_Date) {
-    let year = STD_Date.getFullYear()
-    let month = STD_Date.getMonth() + 1
-    let day = STD_Date.getDate()
+  const getDate = (date) => {
+    let year = date.getFullYear()
+    let month = date.getMonth() + 1
+    let day = date.getDate()
 
     month = month >= 10 ? month : `0${month}`
     day = day >= 10 ? day : `0${day}`
@@ -28,21 +27,21 @@ const MemberDetailChart = ({ chartMode, period, playersGame, playerDetailTarget 
   }
 
   // 1월달에만 년도 출력하도록 변경하기
-  function getNewDateForm(STD_Date) {
-    return `${STD_Date.slice(4, 6)}월 ${STD_Date.slice(6)}일`
+  const changeDateForm = (date) => {
+    return `${date.slice(4, 6)}월 ${date.slice(6)}일`
   }
     
-  function getToday() {
+  const getToday = () => {
     const date = new Date()  
 
     return getDate(date)
   }
 
-  function lastDays(day) {
+  const lastDays = (day) => {
     const date = new Date()
-    const dayOfDate = date.getDate()
+    const today = date.getDate()
     
-    date.setDate(dayOfDate - day)  
+    date.setDate(today - day)  
     
     return getDate(date)
   }
@@ -52,10 +51,10 @@ const MemberDetailChart = ({ chartMode, period, playersGame, playerDetailTarget 
     let dataLabels = []  
 
     for(let i = 0; i < period; i++) {
-        dataLabels.push(getNewDateForm(lastDays(period - i)))
+        dataLabels.push(changeDateForm(lastDays(period - i)))
     }
 
-    dataLabels.push(getNewDateForm(getToday()))  
+    dataLabels.push(changeDateForm(getToday()))  
 
     return dataLabels
   }
@@ -86,7 +85,7 @@ const MemberDetailChart = ({ chartMode, period, playersGame, playerDetailTarget 
   }
 
   const datas = () => {
-    if(chartMode === 'rating') {
+    if(chartType === 'rating') {
       switch(period) {
         case '10':
           return getDatas(period)

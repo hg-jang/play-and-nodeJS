@@ -1,7 +1,13 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import styles from '../css/group.module.css'
 
-const MemberCard = ({ member, index }) => {
+const MemberCard = ({ member, index, setIsModalOpen, setDetailedMember }) => {
+  const members = useSelector((state) => state.group.currentGroup?.members)
+  const onClickOpenDetail = (e) => {
+    setDetailedMember(members.find(member => member.uid === e.target.dataset.uid))
+    setIsModalOpen(true)
+  }
 
   return (
     <div className={styles.member_card} key={index}>
@@ -17,7 +23,7 @@ const MemberCard = ({ member, index }) => {
         <span className={styles.status}>{member.status}</span>
       </div>
       <div className={styles.bot}>
-        <div className="button__index" data-name={member.displayName}>Look Detail</div>
+        <div className="button__index" data-uid={member.uid} onClick={onClickOpenDetail}>Look Detail</div>
       </div>
     </div>
   )
