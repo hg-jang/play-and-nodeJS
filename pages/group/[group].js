@@ -53,6 +53,7 @@ const group_index = () => {
         const memberObj = {
           displayName: member.data().displayName,
           photoURL: member.data().photoURL,
+          uid: member.data().uid,
           joinedDate: member.data().joinedDate,
           rating: member.data().rating,
           start_rating: member.data().start_rating,

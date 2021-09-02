@@ -27,9 +27,7 @@ const MemberDetailModal = ({ isModalOpen, setIsModalOpen, detailedMember, setDet
   }
 
   useEffect(() => {
-    return (
-      setDetailedMember({})
-    )
+    console.log('detailedMembber :', detailedMember)
   })
 
   const info = (
@@ -70,7 +68,7 @@ const MemberDetailModal = ({ isModalOpen, setIsModalOpen, detailedMember, setDet
   )
 
   const getGames = () => {
-    fbaseFirestore.collection(group).doc('group data').collection('members').doc(detailedMember.uid).collection('personal records').orderBy("date", "desc").get()
+    fbaseFirestore.collection(group).doc('group data').collection('members').doc(detailedMember.uid).collection('personal records').get()
     .then((members) => {
       if(members.docs.length === 0) {
         setGames([])

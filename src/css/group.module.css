@@ -115,7 +115,9 @@
 .modal__member_detail > .bot{width: 100%; height: calc(100% - 180px); position: relative;}
 .modal__member_detail > .bot > .bot__left{width: 65%; height: 100%; position: relative;}
 .modal__member_detail > .bot > .bot__right{width: 32%; height: 95%; position: absolute; top: 10px; right: 0; overflow: auto; scrollbar-width: thin;}
-.modal__member_detail > .bot > .bot__right .game__member_detail_modal{border: 1px solid #2d2d2d;}
+
+/* For Game records in Membe Detail Modal */
+.modal__member_detail > .bot > .bot__right > div > div{border: 1px solid #2d2d2d;}
 
 @keyframes size-up-down {
   0%{font-size: 18px;}
