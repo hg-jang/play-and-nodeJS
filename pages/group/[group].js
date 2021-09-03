@@ -83,11 +83,14 @@ const group_index = () => {
 
   return (
     <>
-      <div className={styles.contents}>
-        {content === 'community' && <Community />}
-        {content === 'ranking' && <Ranking />}
-        {content === 'member list' && <MemberList />}
-      </div>
+      {content === 'community' && <Community />}
+      {
+        content !== 'community' &&
+        <div className={styles.contents}>
+          {content === 'ranking' && <Ranking />}
+          {content === 'member list' && <MemberList />}
+        </div>
+      }
       {content !== 'community' &&
       <div className={styles.asides}>
         <div className={styles.aside1}>
