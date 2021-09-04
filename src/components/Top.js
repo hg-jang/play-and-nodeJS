@@ -28,7 +28,7 @@ const Top = () => {
           isLoggedIn ?
           <ul className={styles.header__loggedIn}>
             <li><img src={currentUser.photoURL ? currentUser.photoURL : defaultPhotoURL} alt="user profile" /></li>
-            <li className={styles.name}>{currentUser.displayName ? currentUser.displayName : '익명의 사용자'} 님,</li>
+            <li className={styles.name}>{currentUser.displayName ? currentUser.displayName : '익명의 사용자'}님</li>
             <li><Link href="/profile/"><a><Icon name="setting" size="large" className={styles.icon__setting} /></a></Link></li>
             <li><Button primary onClick={onClickLogOut}>Log Out</Button></li>
           </ul>

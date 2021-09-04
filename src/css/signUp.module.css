@@ -1,5 +1,12 @@
-.signUp{width: 100%; height: calc(100vh - 130px); position: relative; background-color: #101820;}
-.signUp > h1{position: absolute; top: 10%; left: 50%; transform: translateX(-50%); font-size: 48px; color: #3498db;}
+.signUp{
+  width: 100%; height: calc(100vh - 130px); 
+  position: relative; background-color: #101820;
+}
+.signUp > h1{
+  position: absolute; top: 10%; left: 50%; transform: translateX(-50%); 
+  font-size: 48px; color: #3498db;
+  transition: .5s;
+}
 
 .signUp > form{display: flex; flex-direction: column; justify-content: center; align-items: center; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -40%);}
 
@@ -15,3 +22,9 @@
 
 /* for error message */
 .signUp > form span{width: 100%; margin-top: 8px; padding: 4px 0; background-color: rgba(231, 76, 60, .7); color: #fff; text-align: center;}
+
+@media screen and (max-width: 767px) {
+  .signUp > h1{
+    font-size: 40px;
+  }
+}

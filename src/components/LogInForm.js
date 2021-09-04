@@ -45,7 +45,7 @@ const LogInForm = () => {
           <label htmlFor="user-password">비밀번호</label>
           <input className="input__underline" name="user-password" type="password" value={password} onChange={onChangePassword} placeholder="비밀번호" />
         </div>
-        <div className="button__index" onClick={onClickLogIn}>로그인</div>
+        <div className="button__normal" onClick={onClickLogIn}>로그인</div>
       </form>
     </div>
   )

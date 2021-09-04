@@ -48,23 +48,25 @@
 }
 
 
-/* 모바일 사이즈 */
+/* 작은 타블렛 사이즈 */
 @media screen and (max-width: 768px) {
   .header .container__index__header{
     width: 85%;
   }
 
   .header .logo{
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .header .header__loggedIn li:nth-child(1) img{
     width: 32px; height: 32px; margin-right: 8px;
   }
   .header .header__loggedIn li:nth-child(2){
-    margin-right: 6px; font-size: 20px;
+    margin-right: 6px; font-size: 18px;
   }
   .header .header__loggedIn .icon__setting{
-    margin-right: 6px; font-size: 20px;
+    margin-right: 6px; font-size: 18px;
   }
+  
+  .header .header__loggedIn button{font-size: 10px;}
 }

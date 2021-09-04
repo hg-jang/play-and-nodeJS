@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react"
 import { fbaseFirestore } from "../src/fbase"
 import { useSelector } from "react-redux"
 import useInput from "../hooks/useInput"
-import styles from '../src/css/joinGroup.module.css'
+import styles from '../src/css/join-group.module.css'
 import classNames from 'classnames'
 
-const public_joinGroup = () => {
+const join_group = () => {
   const { currentUser } = useSelector((state) => state.auth)
   const [filter, onChnageInput] = useInput('')
   
@@ -74,4 +74,4 @@ const public_joinGroup = () => {
   )
 }
 
-export default public_joinGroup
+export default join_group

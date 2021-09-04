@@ -28,8 +28,14 @@ address, em, i {font-style: normal;}
 .button:hover{background-color: rgba(180, 180, 180, 0.8);}
 
 /* BUTTON__INDEX */
-.button__index{display: inline-flex; justify-content: center; align-items: center; padding: 8px 16px; background-color: rgba(52, 152, 219, .6); border-radius: 6px; font-size: 16px; color: #101820; cursor: pointer;}
-.button__index:hover{background-color: rgba(52, 152, 219, .8);}
+.button__normal{
+  display: inline-flex; justify-content: center; align-items: center; 
+  padding: 8px 16px; 
+  background-color: rgba(52, 152, 219, .6); border-radius: 6px; 
+  font-size: 16px; color: #fff; 
+  cursor: pointer;
+}
+.button__normal:hover{background-color: rgba(52, 152, 219, .8);}
 
 /* DROPDOWN */
 .dropdown{width: 100px; cursor: pointer; transition: .5s;}

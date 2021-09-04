@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Icon } from 'semantic-ui-react'
-import styles from '../css/myGroups.module.css'
+import styles from '../css/my-groups.module.css'
 
 const GroupCard = ({ group, index }) => {
   const defaultSrc = 'https://react.semantic-ui.com/images/avatar/large/elliot.jpg'

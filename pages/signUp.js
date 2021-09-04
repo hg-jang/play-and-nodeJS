@@ -75,7 +75,7 @@ const signUp = () => {
           </div>
           {termError && <span>복종 서약에 동의하십시오.</span>}
         </div>
-        <div className="button__index" onClick={onClickSignUp}>회원가입</div>
+        <div className="button__normal" onClick={onClickSignUp}>회원가입</div>
       </form>
 
     </div>

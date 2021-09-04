@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
-import classNames from 'classnames'
-import { fbaseFirestore } from '../src/fbase'
-import styles from "../src/css/createGroup.module.css"
 import { useSelector } from 'react-redux'
-// import { v4 as uuidv4 } from 'uuid'
+import { fbaseFirestore } from '../src/fbase'
+import styles from "../src/css/create-group.module.css"
+import classNames from 'classnames'
 
-const createGroup = () => {
+const create_group = () => {
   const { currentUser } = useSelector((state) => state.auth)
 
   const router = useRouter()
@@ -125,4 +124,4 @@ const createGroup = () => {
   )
 }
 
-export default createGroup
+export default create_group
