@@ -1,11 +1,10 @@
 import React, { memo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Link from 'next/link'
+import { Icon, Button } from 'semantic-ui-react'
+import { LOG_OUT_REQUEST } from '../../reducers/auth'
 import styles from '../css/Top.module.css'
 import classNames from 'classnames'
-import { Icon } from 'semantic-ui-react'
-import { LOG_OUT_REQUEST } from '../../reducers/auth'
-// import UserInfoModal from '../index/component/UserInfoModal'
 
 const Top = () => {
   const dispatch = useDispatch()
@@ -31,12 +30,12 @@ const Top = () => {
             <li><img src={currentUser.photoURL ? currentUser.photoURL : defaultPhotoURL} alt="user profile" /></li>
             <li className={styles.name}>{currentUser.displayName ? currentUser.displayName : '익명의 사용자'} 님,</li>
             <li><Link href="/profile/"><a><Icon name="setting" size="large" className={styles.icon__setting} /></a></Link></li>
-            <li className="button__index" onClick={onClickLogOut}>Log out</li>
+            <li><Button primary onClick={onClickLogOut}>Log Out</Button></li>
           </ul>
           :
           <ul className={styles.header__loggedOut}>
-            <li className="button__index"><Link href="/logIn"><a>Log In</a></Link></li>
-            <li className="button__index"><Link href="/signUp"><a>Sign Up</a></Link></li>
+            <Button primary><Link href="/logIn"><a>Log In</a></Link></Button>
+            <Button primary><Link href="/signUp"><a>Sign Up</a></Link></Button>
           </ul>
           }
         </div>

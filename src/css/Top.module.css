@@ -1,17 +1,70 @@
-.header{width: 100%; height: 70px; background-color: #101820; border-bottom: 1px solid #636e72;}
-.header .container__index__header{display: flex; justify-content: space-between; align-items: center; height: 100%;}
-.header .logo{margin: 0; font-size: 32px; color: #3498db; letter-spacing: 2px;}
+.header{
+  width: 100%; height: 70px; 
+  background-color: #101820; 
+  border-bottom: 1px solid #636e72;
+}
+.header .container__index__header{
+  display: flex; justify-content: space-between; align-items: center; 
+  width: 1080px; height: 100%; margin: 0 auto;
+  transition: .5s;
+}
+.header .logo{
+  margin: 0; 
+  font-size: 32px; color: #3498db; letter-spacing: 2px;
+}
 
 .header ul{display: flex; align-items: center; position: relative;}
 
-.header .header__loggedIn li:nth-child(1) img{width: 40px; height: 40px; margin-right: 20px; border-radius: 50%;}
-.header .header__loggedIn li:nth-child(2){margin-right: 8px; font-size: 20px; color: #3498db; cursor: pointer;}
-.header .header__loggedIn .icon__setting{margin-right: 12px; font-size: 20px; color: #3498db; cursor: pointer;}
-.header .header__loggedIn .icon__setting:hover{animation: rotate 2s linear infinite;}
+.header .header__loggedIn li:nth-child(1) img{
+  width: 40px; height: 40px; margin-right: 20px; border-radius: 50%;
+  transition: .5s;
+}
+.header .header__loggedIn li:nth-child(2){
+  margin-right: 8px; 
+  font-size: 20px; color: #3498db; 
+  transition: .5s; cursor: pointer;
+}
+.header .header__loggedIn .icon__setting{
+  margin-right: 12px; 
+  font-size: 20px; color: #3498db; 
+  transition: .5s; cursor: pointer;
+}
+.header .header__loggedIn .icon__setting:hover{
+  animation: rotate 2s linear infinite;
+}
 
-.header .header__loggedOut li{margin-left: 16px;}
+.header .header__loggedOut button{margin-left: 8px;}
 
 @keyframes rotate {
   0%{transform: rotate(0deg);}
   100%{transform: rotate(360deg);}
+}
+
+/* 타블렛 사이즈 */
+@media screen and (max-width: 1079px) {
+  .header .container__index__header{
+    width: 768px;
+  }
+}
+
+
+/* 모바일 사이즈 */
+@media screen and (max-width: 768px) {
+  .header .container__index__header{
+    width: 85%;
+  }
+
+  .header .logo{
+    font-size: 24px;
+  }
+
+  .header .header__loggedIn li:nth-child(1) img{
+    width: 32px; height: 32px; margin-right: 8px;
+  }
+  .header .header__loggedIn li:nth-child(2){
+    margin-right: 6px; font-size: 20px;
+  }
+  .header .header__loggedIn .icon__setting{
+    margin-right: 6px; font-size: 20px;
+  }
 }
