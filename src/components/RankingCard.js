@@ -30,42 +30,42 @@ const RankingCard = ({ name, type }) => {
       <div className={styles.no_rankings}>가입된 멤버가 한 명도 없습니다.</div>
       :
       <div className={styles.ranking}>
-      {ranking.map((member,index) => (
-        <div className={styles.ranking_card} key={index}>
-          <div className={styles.left}>
-            <div className={styles.profile_img}>
-              {
-              member.photoURL ?
-              <img src={member.photoURL} alt="member profile" /> :
-              <img src="https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/68/d768b6caa2c0d23507bc12087bf171a8.jpeg" alt="profile-img" />
-              }
+        {ranking.map((member,index) => (
+          <div className={styles.ranking_card} key={index}>
+            <div className={styles.left}>
+              <div className={styles.profile_img}>
+                {
+                member.photoURL ?
+                <img src={member.photoURL} alt="member profile" /> :
+                <img src="https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/68/d768b6caa2c0d23507bc12087bf171a8.jpeg" alt="profile-img" />
+                }
+              </div>
+              <div className={styles.name}>
+                {member.displayName}
+              </div>
             </div>
-            <div className={styles.name}>
-              {member.displayName}
-            </div>
-          </div>
-          <div className={styles.mid}>
-            <span className={styles.rating}>
-              <span>{member.rating}</span>  
-              <span>Rating</span>
-            </span>
-            <div className={styles.score}>
-              <span className={styles.win}>
-                <span>{member.winnedGames}</span>
-                <span>승</span>
+            <div className={styles.mid}>
+              <span className={styles.rating}>
+                <span>{member.rating} pt.</span>  
+                <span>Rating</span>
               </span>
-              <span className={styles.lose}>
-                <span>{member.losedGames}</span>
-                <span>패</span>
-              </span>
+              <div className={styles.score}>
+                <span className={styles.win}>
+                  <span>{member.winnedGames}</span>
+                  <span>승</span>
+                </span>
+                <span className={styles.lose}>
+                  <span>{member.losedGames}</span>
+                  <span>패</span>
+                </span>
+              </div>
+            </div>
+            <div className={styles.right}>
+              <span className={styles.ranking}>{index + 1}</span>
+              <span>Ranking</span>
             </div>
           </div>
-          <div className={styles.right}>
-            <span className={styles.ranking}>{index + 1}</span>
-            <span>Ranking</span>
-          </div>
-        </div>
-      ))}
+        ))}
       </div>
       }
     </>

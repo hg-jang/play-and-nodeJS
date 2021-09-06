@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux';
 import { Form, TextArea, Button } from 'semantic-ui-react'
 import useInput from '../../hooks/useInput'
-import styles from '../css/Community.module.css'
+import styles from '../css/group.module.css'
 
 const PostForm = () => {
   const { currentUser } = useSelector((state) => state.auth)

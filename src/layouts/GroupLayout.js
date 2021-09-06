@@ -4,7 +4,7 @@ import Nav from "../components/Nav"
 
 const GroupLayout = ({ children }) => {
   return (
-    <div className={styles.group_container}>
+    <div className={styles.group_grid}>
       <Nav />
       { children }
     </div>

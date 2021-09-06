@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Button } from 'semantic-ui-react'
 import styles from '../css/group.module.css'
 
 const MemberCard = ({ member, index, setIsModalOpen, setDetailedMember }) => {
@@ -23,7 +24,7 @@ const MemberCard = ({ member, index, setIsModalOpen, setDetailedMember }) => {
         <span className={styles.status}>{member.status}</span>
       </div>
       <div className={styles.bot}>
-        <div className="button__index" data-uid={member.uid} onClick={onClickOpenDetail}>Look Detail</div>
+        <Button primary data-uid={member.uid} onClick={onClickOpenDetail}>Look Detail</Button>
       </div>
     </div>
   )

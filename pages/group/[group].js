@@ -2,13 +2,13 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { fbaseFirestore } from '../../src/fbase'
+import { SET_GAMES, SET_MEMBERS } from '../../reducers/group'
 import Ranking from "../../src/components/Ranking"
 import MemberList from "../../src/components/MemberList"
 import Community from "../../src/components/Community"
 import GameRecords from "../../src/components/GameRecords"
 import Ad from "../../src/components/Ad"
 import styles from '../../src/css/group.module.css'
-import { SET_GAMES, SET_MEMBERS } from '../../reducers/group'
 
 const group_index = () => {
   const router = useRouter()
@@ -86,20 +86,20 @@ const group_index = () => {
       {content === 'community' && <Community />}
       {
         content !== 'community' &&
-        <div className={styles.contents}>
-          {content === 'ranking' && <Ranking />}
-          {content === 'member list' && <MemberList />}
+        <div className={styles.group_container_rk_ml}>
+          <div className={styles.contents}>
+            {content === 'ranking' && <Ranking />}
+            {content === 'member list' && <MemberList />}
+          </div>
+          <div className={styles.asides}>
+            <div className={styles.aside1}>
+              <GameRecords games={currentGroup.games} />
+            </div>
+            <div className={styles.aside2}>
+              <Ad />
+            </div>
+          </div>
         </div>
-      }
-      {content !== 'community' &&
-      <div className={styles.asides}>
-        <div className={styles.aside1}>
-          <GameRecords games={currentGroup.games} />
-        </div>
-        <div className={styles.aside2}>
-          <Ad />
-        </div>
-      </div>
       }
     </>
   )

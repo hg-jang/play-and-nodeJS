@@ -1,11 +1,11 @@
 import React from 'react';
 import PostForm from './PostForm';
-import styles from '../css/Community.module.css'
+import styles from '../css/group.module.css'
 
 const Community = () => {
 
   return (
-    <div className={styles.community}>
+    <div className={styles.group_container_cm}>
       <div className={styles.post_container}>
         <PostForm />
         {/* <Post /> */}
