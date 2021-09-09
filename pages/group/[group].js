@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { fbaseFirestore } from '../../src/fbase'
-import { SET_GAMES, SET_MEMBERS } from '../../reducers/group'
+import { LOAD_POSTS, SET_GAMES, SET_MEMBERS } from '../../reducers/group'
 import Ranking from "../../src/components/Ranking"
 import MemberList from "../../src/components/MemberList"
 import Community from "../../src/components/Community"
@@ -73,11 +73,39 @@ const group_index = () => {
     })
   }
 
+  const getPosts = useCallback(() => {
+    let postsArr = []
+
+    fbaseFirestore.collection(group).doc('group data').collection('posts').get()
+    .then((posts) => {
+
+      if(posts.length === 0) {return postsArr}
+
+      posts.forEach((post) => {
+        const postsObj = {
+          writerUID: post.data().writerUID,
+          writerPhotoURL: post.data().writerPhotoURL,
+          writerDisplayName: post.data().writerDisplayName,
+          content: post.data().content,
+          imagePaths: post.data().imagePaths,
+        }
+        postsArr = postsArr.concat(postsObj)
+      })
+    })
+    .then(() => {
+      dispatch({
+        type: LOAD_POSTS,
+        data: postsArr
+      })
+    })
+  }, [])
+
 
   useEffect(() => {
     if(router.query.group) {
       getGames()
       getMembers()
+      getPosts()
     }
   }, [router])
 

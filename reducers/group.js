@@ -27,7 +27,12 @@ export const REMOVE_IMAGE_FAILURE = 'REMOVE_IMAGE_FAILURE'
 
 export const SET_GAMES = 'SET_GAMES'
 export const SET_MEMBERS = 'SET_MEMBERS'
+
+export const ADD_POST = 'ADD_POST'
+export const LOAD_POSTS = 'LOAD_POSTS'
+
 export const CHANGE_CONTENT = 'CHANGE_CONTENT'
+export const INIT_IMAGEPATHS = 'INIT_IMAGEPATHS'
 
 const reducer = (state = initialState, action) => {
   switch(action.type) {
@@ -51,6 +56,33 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         content: action.data,
+      }
+    case INIT_IMAGEPATHS:
+      return {
+        ...state,
+        imagePaths: [],
+      }
+    case LOAD_POSTS:
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          posts: action.data,
+        }
+      }
+    case ADD_POST:
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          posts: [{
+            writerUID: action.data.writerUID,
+            writerPhotoURL: action.data.writerPhotoURL,
+            writerDisplayName: action.data.writerDisplayName,
+            content: action.data.content,
+            imagePaths: action.data.imagePaths,
+          }, ...state.currentGroup.posts]
+        }
       }
     case UPLOAD_POST_IMAGE_REQUEST:
       return {
@@ -79,7 +111,6 @@ const reducer = (state = initialState, action) => {
         imageURLDownloadError: null,
       }
     case DOWNLOAD_POST_IMAGE_URL_SUCCESS:
-      console.log(action.data);
       return {
         ...state,
         isImageURLDownloading: false,
@@ -112,6 +143,7 @@ const reducer = (state = initialState, action) => {
         isImageRemoving: false,
         imageRemoveError: action.error,
       }
+    
   
     default:
       return state
