@@ -53,6 +53,7 @@ const Post = ({ post }) => {
   }, [])
 
   const onClickEditPost = useCallback(() => {
+    setNewPost(post.content)
     setIsEditing(true)
     dispatch({
       type: SET_EDITING_IMAGEPATHS,
@@ -136,11 +137,12 @@ const Post = ({ post }) => {
           {post.content}
         </div>
       </div>
+      {post.imagePaths.length > 0 &&
       <div className={styles.post_images}>
         {post.imagePaths.map((imagePath) => (
           <img src={imagePath.path} alt="post image" />
         ))}
-      </div>
+      </div>}
       </>
       :
       <>
