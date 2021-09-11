@@ -9,6 +9,7 @@ export const initialState = {
   isImageRemoved: false,
   imageRemoveError: null,
   imagePaths: [],
+  editingImagePaths: [],
   content: 'community',
   currentGroup: {},
 }
@@ -17,26 +18,42 @@ export const UPLOAD_POST_IMAGE_REQUEST = 'UPLOAD_POST_IMAGE_REQUEST'
 export const UPLOAD_POST_IMAGE_SUCCESS = 'UPLOAD_POST_IMAGE_SUCCESS'
 export const UPLOAD_POST_IMAGE_FAILURE = 'UPLOAD_POST_IMAGE_FAILURE'
 
+export const UPLOAD_EDITING_POST_IMAGE_REQUEST = 'UPLOAD_EDITING_POST_IMAGE_REQUEST'
+export const UPLOAD_EDITING_POST_IMAGE_SUCCESS = 'UPLOAD_EDITING_POST_IMAGE_SUCCESS'
+export const UPLOAD_EDITING_POST_IMAGE_FAILURE = 'UPLOAD_EDITING_POST_IMAGE_FAILURE'
+
 export const DOWNLOAD_POST_IMAGE_URL_REQUEST = 'DOWNLOAD_POST_IMAGE_URL_REQUEST'
 export const DOWNLOAD_POST_IMAGE_URL_SUCCESS = 'DOWNLOAD_POST_IMAGE_URL_SUCCESS'
 export const DOWNLOAD_POST_IMAGE_URL_FAILURE = 'DOWNLOAD_POST_IMAGE_URL_FAILURE'
+
+export const DOWNLOAD_EDITING_POST_IMAGE_URL_REQUEST = 'DOWNLOAD_EDITING_POST_IMAGE_URL_REQUEST'
+export const DOWNLOAD_EDITING_POST_IMAGE_URL_SUCCESS = 'DOWNLOAD_EDITING_POST_IMAGE_URL_SUCCESS'
+export const DOWNLOAD_EDITING_POST_IMAGE_URL_FAILURE = 'DOWNLOAD_EDITING_POST_IMAGE_URL_FAILURE'
 
 export const REMOVE_IMAGE_REQUEST = 'REMOVE_IMAGE_REQUEST'
 export const REMOVE_IMAGE_SUCCESS = 'REMOVE_IMAGE_SUCCESS'
 export const REMOVE_IMAGE_FAILURE = 'REMOVE_IMAGE_FAILURE'
 
-export const SET_GAMES = 'SET_GAMES'
-export const SET_MEMBERS = 'SET_MEMBERS'
+export const REMOVE_EDITING_IMAGE_REQUEST = 'REMOVE_EDITING_IMAGE_REQUEST'
+export const REMOVE_EDITING_IMAGE_SUCCESS = 'REMOVE_EDITING_IMAGE_SUCCESS'
+export const REMOVE_EDITING_IMAGE_FAILURE = 'REMOVE_EDITING_IMAGE_FAILURE'
+
+export const LOAD_GAMES = 'LOAD_GAMES'
+export const LOAD_MEMBERS = 'LOAD_MEMBERS'
+export const LOAD_POSTS = 'LOAD_POSTS'
 
 export const ADD_POST = 'ADD_POST'
-export const LOAD_POSTS = 'LOAD_POSTS'
+export const REMOVE_POST = 'REMOVE_POST'
+export const EDIT_POST = 'EDIT_POST'
+export const SET_EDITING_IMAGEPATHS = 'SET_EDITING_IMAGEPATHS'
 
 export const CHANGE_CONTENT = 'CHANGE_CONTENT'
 export const INIT_IMAGEPATHS = 'INIT_IMAGEPATHS'
+export const INIT_EDITING_IMAGEPATHS = 'INIT_EDITING_IMAGEPATHS'
 
 const reducer = (state = initialState, action) => {
   switch(action.type) {
-    case SET_GAMES:
+    case LOAD_GAMES:
       return {
         ...state,
         currentGroup: {
@@ -44,12 +61,20 @@ const reducer = (state = initialState, action) => {
           games: action.data,
         }
       }
-    case SET_MEMBERS:
+    case LOAD_MEMBERS:
       return {
         ...state,
         currentGroup: {
           ...state.currentGroup,
           members: action.data,
+        }
+      }
+    case LOAD_POSTS:
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          posts: action.data,
         }
       }
     case CHANGE_CONTENT:
@@ -62,13 +87,15 @@ const reducer = (state = initialState, action) => {
         ...state,
         imagePaths: [],
       }
-    case LOAD_POSTS:
+    case INIT_EDITING_IMAGEPATHS:
       return {
         ...state,
-        currentGroup: {
-          ...state.currentGroup,
-          posts: action.data,
-        }
+        editingImagePaths: state.imagePaths.map((path) => {
+          if(action.data !== path.id) {
+            return path
+          }
+          return null
+        })
       }
     case ADD_POST:
       return {
@@ -81,7 +108,42 @@ const reducer = (state = initialState, action) => {
             writerDisplayName: action.data.writerDisplayName,
             content: action.data.content,
             imagePaths: action.data.imagePaths,
+            date: action.data.date,
+            id: action.data.id,
           }, ...state.currentGroup.posts]
+        }
+      }
+    case REMOVE_POST:
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          posts: state.currentGroup.posts.filter((post) => post.id !== action.data)
+        }
+      }
+    case SET_EDITING_IMAGEPATHS:
+      return {
+        ...state,
+        editingImagePaths: [...state.editingImagePaths, {
+          id: action.data,
+          imagePaths: [],
+        }]
+      }
+    case EDIT_POST:
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          posts: state.currentGroup.posts.map((post) => {
+            if(post.id !== action.data.id) {
+              return post
+            }
+            return {
+              ...post,
+              content: action.data.content,
+              imagePaths: action.data.imagePaths,
+            }
+          })
         }
       }
     case UPLOAD_POST_IMAGE_REQUEST:
@@ -98,6 +160,25 @@ const reducer = (state = initialState, action) => {
         isImageUploaded: true,
       }
     case UPLOAD_POST_IMAGE_FAILURE:
+      return {
+        ...state,
+        isImageUploading: false,
+        imageUploadError: action.error,
+      }
+    case UPLOAD_EDITING_POST_IMAGE_REQUEST:
+      return {
+        ...state,
+        isImageUploading: true,
+        isImageUploaded: false,
+        imageUploadError: null,
+      }
+    case UPLOAD_EDITING_POST_IMAGE_SUCCESS:
+      return {
+        ...state,
+        isImageUploading: false,
+        isImageUploaded: true,
+      }
+    case UPLOAD_EDITING_POST_IMAGE_FAILURE:
       return {
         ...state,
         isImageUploading: false,
@@ -123,6 +204,34 @@ const reducer = (state = initialState, action) => {
         isImageURLDownloading: false,
         imageURLDownloadError: action.error,
       }
+    case DOWNLOAD_EDITING_POST_IMAGE_URL_REQUEST:
+      return {
+        ...state,
+        isImageURLDownloading: true,
+        isImageURLDownloaded: false,
+        imageURLDownloadError: null,
+      }
+    case DOWNLOAD_EDITING_POST_IMAGE_URL_SUCCESS:
+      return {
+        ...state,
+        isImageURLDownloading: false,
+        isImageURLDownloaded: true,
+        editingImagePaths: state.editingImagePaths.map((path) => {
+          if(path.id !== action.data.id) {
+            return path
+          }
+          return {
+            ...path,
+            imagePaths: [...path.imagePaths, { path: action.data.path, ref: action.data.ref }]
+          }
+        })
+      }
+    case DOWNLOAD_EDITING_POST_IMAGE_URL_FAILURE:
+      return {
+        ...state,
+        isImageURLDownloading: false,
+        imageURLDownloadError: action.error,
+      }
     case REMOVE_IMAGE_REQUEST:
       return {
         ...state,
@@ -138,6 +247,34 @@ const reducer = (state = initialState, action) => {
         imagePaths: state.imagePaths.filter((path) => path.ref !== action.data)
       }
     case REMOVE_IMAGE_FAILURE:
+      return {
+        ...state,
+        isImageRemoving: false,
+        imageRemoveError: action.error,
+      }
+    case REMOVE_EDITING_IMAGE_REQUEST:
+      return {
+        ...state,
+        isImageRemoving: true,
+        isImageRemoved: false,
+        imageRemoveError: null,
+      }
+    case REMOVE_EDITING_IMAGE_SUCCESS:
+      return {
+        ...state,
+        isImageRemoving: false,
+        isImageRemoved: true,
+        editingImagePaths: state.editingImagePaths.map((path) => {
+          if(path.id === action.data.id) {
+            return {
+              ...path,
+              imagePaths: path.imagePaths.filter((path) => path.ref !== action.data.ref)
+            }
+          }
+          return path
+        })
+      }
+    case REMOVE_EDITING_IMAGE_FAILURE:
       return {
         ...state,
         isImageRemoving: false,

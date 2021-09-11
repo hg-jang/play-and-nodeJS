@@ -2,7 +2,7 @@ import React, { useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { fbaseFirestore } from '../../src/fbase'
-import { LOAD_POSTS, SET_GAMES, SET_MEMBERS } from '../../reducers/group'
+import { LOAD_POSTS, LOAD_GAMES, LOAD_MEMBERS } from '../../reducers/group'
 import Ranking from "../../src/components/Ranking"
 import MemberList from "../../src/components/MemberList"
 import Community from "../../src/components/Community"
@@ -17,7 +17,7 @@ const group_index = () => {
   const dispatch = useDispatch()
   const { content, currentGroup } = useSelector((state) => state.group)
 
-  const getGames = () => {
+  const loadGames = () => {
     let gamesArr = []
     fbaseFirestore.collection(group).doc('group data').collection('games').get()
     .then((games) => {
@@ -38,13 +38,13 @@ const group_index = () => {
     })
     .then(() => {
       dispatch({
-        type: SET_GAMES,
+        type: LOAD_GAMES,
         data: gamesArr,
       })
     })
   }
 
-  const getMembers = () => {
+  const loadMembers = () => {
     let membersArr = []
 
     fbaseFirestore.collection(group).doc('group data').collection('members').get()
@@ -67,16 +67,16 @@ const group_index = () => {
     })
     .then(() => {
       dispatch({
-        type: SET_MEMBERS,
+        type: LOAD_MEMBERS,
         data: membersArr,
       })
     })
   }
 
-  const getPosts = useCallback(() => {
+  const loadPosts = useCallback(() => {
     let postsArr = []
 
-    fbaseFirestore.collection(group).doc('group data').collection('posts').get()
+    fbaseFirestore.collection(group).doc('group data').collection('posts').orderBy('date', "desc").get()
     .then((posts) => {
 
       if(posts.length === 0) {return postsArr}
@@ -88,6 +88,8 @@ const group_index = () => {
           writerDisplayName: post.data().writerDisplayName,
           content: post.data().content,
           imagePaths: post.data().imagePaths,
+          date: post.data().date,
+          id: post.data().id,
         }
         postsArr = postsArr.concat(postsObj)
       })
@@ -103,9 +105,9 @@ const group_index = () => {
 
   useEffect(() => {
     if(router.query.group) {
-      getGames()
-      getMembers()
-      getPosts()
+      loadGames()
+      loadMembers()
+      loadPosts()
     }
   }, [router])
 

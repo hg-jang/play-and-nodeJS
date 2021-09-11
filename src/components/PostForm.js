@@ -8,6 +8,26 @@ import styles from '../css/group.module.css'
 import { fbaseFirestore } from '../fbase';
 import { v4 as uuidv4 } from 'uuid'
 
+const getDate = () => {
+  const today = new Date()
+
+  const year = today.getFullYear()
+  let month = today.getMonth() 
+  let date = today.getDate()
+
+  let hour = today.getHours()
+  let minute = today.getMinutes()
+  let second = today.getSeconds()
+
+  month = month < 10 ? `0${month}` : month
+  date = date < 10 ? `0${date}` : date
+  hour = hour < 10 ? `0${hour}` : hour
+  minute = minute < 10 ? `0${minute}` : minute
+  second = second < 10 ? `0${second}` : second
+
+  return `${year}${month}${date}-${hour}${minute}${second}`
+}
+
 const PostForm = () => {
   const router = useRouter()
   const { group } = router.query
@@ -39,23 +59,21 @@ const PostForm = () => {
   const onClickAddPost = useCallback(() => {
     const id = uuidv4()
 
-    fbaseFirestore.collection(group).doc('group data').collection('posts').doc(id).set({
+    const postObj = {
       writerUID: currentUser.uid,
       writerPhotoURL: currentUser.photoURL,
       writerDisplayName: currentUser.displayName,
       content: post,
       imagePaths: imagePaths,
-    })
+      date: getDate(),
+      id: id,
+    }
+
+    fbaseFirestore.collection(group).doc('group data').collection('posts').doc(id).set(postObj)
     .then(() => {
       dispatch({
         type: ADD_POST,
-        data: {
-          writerUID: currentUser.uid,
-          writerPhotoURL: currentUser.photoURL,
-          writerDisplayName: currentUser.displayName,
-          content: post,
-          imagePaths: imagePaths,
-        }
+        data: postObj,
       })
     })
     .catch((error) => {
@@ -79,18 +97,21 @@ const PostForm = () => {
 
   return (
     <Form>
-      <TextArea placeholder="내용을 적어주세요" value={post} onChange={onChangePost} />
+      <TextArea placeholder="오늘의 테니스 라이프를 적어주세요" value={post} onChange={onChangePost} />
       <div className={styles.post_buttons}>
         <input type="file" hidden ref={imageInputRef} onChange={onChangeImageInput} />
         <Button secondary onClick={onClickUploadImage}>사진 추가</Button>
         <Button primary onClick={onClickAddPost}>작성</Button>
       </div>
-      {imagePaths.map((path, index) => (
-        <div className={styles.img} key={index}>
-          <img src={path.path} alt="image" />
-          <Button color='red' data-ref={path.ref} onClick={onClickRemoveImage}>제거</Button>
-        </div>
-      ))}
+      {imagePaths.length > 0 &&
+      <div className={styles.images}>
+        {imagePaths.map((path, index) => (
+          <div className={styles.img} key={index}>
+            <img src={path.path} alt="image" />
+            <Button size="tiny" color='red' data-ref={path.ref} onClick={onClickRemoveImage}>제거</Button>
+          </div>
+        ))}
+      </div>}
     </Form>
   )
 }
