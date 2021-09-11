@@ -8,7 +8,7 @@ import styles from '../css/group.module.css'
 import { fbaseFirestore } from '../fbase';
 import { v4 as uuidv4 } from 'uuid'
 
-const getDate = () => {
+export const getDate = () => {
   const today = new Date()
 
   const year = today.getFullYear()
@@ -85,7 +85,7 @@ const PostForm = () => {
         type: INIT_IMAGEPATHS,
       })
     })
-  }, [post, imagePaths])
+  }, [group, post, imagePaths])
 
   const onClickRemoveImage = useCallback((e) => {
     dispatch({

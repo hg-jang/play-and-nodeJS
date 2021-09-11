@@ -7,8 +7,8 @@ import {
   INIT_EDITING_IMAGEPATHS, REMOVE_POST, EDIT_POST, 
   SET_EDITING_IMAGEPATHS, UPLOAD_EDITING_POST_IMAGE_REQUEST, REMOVE_EDITING_IMAGE_REQUEST,
  } from "../../reducers/group";
+ import CommentForm from "./CommentForm";
 // import Comment from './Comment'
-// import CommentForm from "./CommentForm";
 import styles from '../css/group.module.css'
 import useInput from "../../hooks/useInput";
 
@@ -166,10 +166,10 @@ const Post = ({ post }) => {
         </div>}
       </>
       }
-      {/* <div className={styles.post_comments}> */}
-        {/* <CommentForm /> */}
+      <div className={styles.post_comments}>
+        <CommentForm post={post} />
         {/* {post.comments.map((comment) => { <Comment comment={comment} /> })} */}
-      {/* </div> */}
+      </div>
     </div>
   )
 }

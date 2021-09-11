@@ -47,9 +47,12 @@ export const REMOVE_POST = 'REMOVE_POST'
 export const EDIT_POST = 'EDIT_POST'
 export const SET_EDITING_IMAGEPATHS = 'SET_EDITING_IMAGEPATHS'
 
-export const CHANGE_CONTENT = 'CHANGE_CONTENT'
 export const INIT_IMAGEPATHS = 'INIT_IMAGEPATHS'
 export const INIT_EDITING_IMAGEPATHS = 'INIT_EDITING_IMAGEPATHS'
+
+export const ADD_COMMENT = 'ADD_COMMENT'
+
+export const CHANGE_CONTENT = 'CHANGE_CONTENT'
 
 const reducer = (state = initialState, action) => {
   switch(action.type) {
@@ -280,7 +283,22 @@ const reducer = (state = initialState, action) => {
         isImageRemoving: false,
         imageRemoveError: action.error,
       }
-    
+    case ADD_COMMENT:
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          posts: state.currentGroup.posts.map((post) => {
+            if(post.id !== action.data.id) {
+              return post
+            }
+            return {
+              ...post,
+              comments: [action.data.comment, ...post.comments]
+            }
+          })
+        }
+      }
   
     default:
       return state
