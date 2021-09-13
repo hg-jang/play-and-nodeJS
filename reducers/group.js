@@ -41,16 +41,23 @@ export const REMOVE_EDITING_IMAGE_FAILURE = 'REMOVE_EDITING_IMAGE_FAILURE'
 export const LOAD_GAMES = 'LOAD_GAMES'
 export const LOAD_MEMBERS = 'LOAD_MEMBERS'
 export const LOAD_POSTS = 'LOAD_POSTS'
+export const LOAD_COMMENTS = 'LOAD_COMMENTS'
 
 export const ADD_POST = 'ADD_POST'
 export const REMOVE_POST = 'REMOVE_POST'
 export const EDIT_POST = 'EDIT_POST'
 export const SET_EDITING_IMAGEPATHS = 'SET_EDITING_IMAGEPATHS'
 
+export const LIKE_POST = 'LIKE_POST'
+export const DISLIKE_POST = 'DISLIKE_POST'
+
 export const INIT_IMAGEPATHS = 'INIT_IMAGEPATHS'
 export const INIT_EDITING_IMAGEPATHS = 'INIT_EDITING_IMAGEPATHS'
 
 export const ADD_COMMENT = 'ADD_COMMENT'
+
+export const LIKE_COMMENT = 'LIKE_COMMENT'
+export const DISLIKE_COMMENT = 'DISLIKE_COMMENT'
 
 export const CHANGE_CONTENT = 'CHANGE_CONTENT'
 
@@ -78,6 +85,23 @@ const reducer = (state = initialState, action) => {
         currentGroup: {
           ...state.currentGroup,
           posts: action.data,
+        }
+      }
+    case LOAD_COMMENTS:
+      console.log('comments 로드 함');
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          posts: state.currentGroup.posts.map((post) => {
+            if(post.id !== action.data.postId) {
+              return post
+            }
+            return {
+              ...post,
+              comments: action.data.comments,
+            }
+          })
         }
       }
     case CHANGE_CONTENT:
@@ -299,7 +323,34 @@ const reducer = (state = initialState, action) => {
           })
         }
       }
-  
+    case LIKE_COMMENT:
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          posts: state.currentGroup.posts.map((post) => {
+            if(post.id !== action.data.postId) {
+              return post
+            }
+            return {
+              ...post,
+              comments: post.comments.map((comment) => {
+                if(comment.id !== action.data.commentId) {
+                  return comment
+                }
+                return {
+                  ...comment,
+                  like: [...comment.like, action.data.who]
+                }
+              })
+            }
+          })
+        }
+      }
+    case DISLIKE_COMMENT:
+      return {
+
+      }
     default:
       return state
   }

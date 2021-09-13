@@ -6,9 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { 
   INIT_EDITING_IMAGEPATHS, REMOVE_POST, EDIT_POST, 
   SET_EDITING_IMAGEPATHS, UPLOAD_EDITING_POST_IMAGE_REQUEST, REMOVE_EDITING_IMAGE_REQUEST,
+  LOAD_COMMENTS,
  } from "../../reducers/group";
  import CommentForm from "./CommentForm";
-// import Comment from './Comment'
+import Comment from './Comment'
 import styles from '../css/group.module.css'
 import useInput from "../../hooks/useInput";
 
@@ -116,6 +117,45 @@ const Post = ({ post }) => {
     }
   }, [editingImagePaths])
 
+  const loadComments = () => {
+    let commentsArr = []
+
+    fbaseFirestore.collection(group).doc('group data').collection('posts').doc(post.id).collection('comments')
+    .get()
+    .then((comments) => {
+      comments.forEach((comment) => {
+        const commentObj = {
+          commentWriterDisplayName: comment.data().commentWriterDisplayName,
+          commentWriterPhotoURL: comment.data().commentWriterPhotoURL,
+          commentWriterUID: comment.data().commentWriterUID,
+          content: comment.data().content,
+          date: comment.data().date,
+          id: comment.data().id,
+        }
+        commentsArr = commentsArr.concat(commentObj)
+      })
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+    .then(() => {
+      dispatch({
+        type: LOAD_COMMENTS,
+        data: {
+          comments: commentsArr,
+          postId: post.id,
+        }
+      })
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
+  useEffect(() => {
+    loadComments()
+  }, [])
+
   return (
     <div className={styles.post}>
       <div className={styles.post_writer}>
@@ -168,7 +208,9 @@ const Post = ({ post }) => {
       }
       <div className={styles.post_comments}>
         <CommentForm post={post} />
-        {/* {post.comments.map((comment) => { <Comment comment={comment} /> })} */}
+        {post.comments
+        ? post.comments.map((comment) => <Comment postId={post.id} comment={comment} />)
+        : <div>코멘트 없다.</div>}
       </div>
     </div>
   )
