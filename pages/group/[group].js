@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { fbaseFirestore } from '../../src/fbase'
@@ -19,7 +19,8 @@ const group_index = () => {
 
   const loadGames = () => {
     let gamesArr = []
-    fbaseFirestore.collection(group).doc('group data').collection('games').get()
+    fbaseFirestore.collection(group).doc('group data').collection('games')
+    .get()
     .then((games) => {
       games.forEach((game) => {
         const gameObj = {
@@ -36,18 +37,25 @@ const group_index = () => {
         gamesArr = gamesArr.concat(gameObj)
       })
     })
+    .catch((error) => {
+      console.log(error)
+    })
     .then(() => {
       dispatch({
         type: LOAD_GAMES,
         data: gamesArr,
       })
     })
+    .catch((error) => {
+      console.log(error)
+    })
   }
 
   const loadMembers = () => {
     let membersArr = []
 
-    fbaseFirestore.collection(group).doc('group data').collection('members').get()
+    fbaseFirestore.collection(group).doc('group data').collection('members')
+    .get()
     .then((members) => {
       members.forEach((member) => {
         const memberObj = {
@@ -65,42 +73,46 @@ const group_index = () => {
         membersArr = membersArr.concat(memberObj)
       })
     })
+    .catch((error) => {
+      console.log(error)
+    })
     .then(() => {
       dispatch({
         type: LOAD_MEMBERS,
         data: membersArr,
       })
     })
+    .catch((error) => {
+      console.log(error)
+    })
   }
 
-  const loadPosts = useCallback(() => {
+  const loadPosts = async () => {
     let postsArr = []
+    let postObj = {}
 
-    fbaseFirestore.collection(group).doc('group data').collection('posts').orderBy('date', "desc").get()
-    .then((posts) => {
+    const querySnapshot = await fbaseFirestore.collection(group).doc('group data').collection('posts').orderBy('date', "desc").get()
 
-      if(posts.length === 0) {return postsArr}
-
-      posts.forEach((post) => {
-        const postsObj = {
-          writerUID: post.data().writerUID,
-          writerPhotoURL: post.data().writerPhotoURL,
-          writerDisplayName: post.data().writerDisplayName,
-          content: post.data().content,
-          imagePaths: post.data().imagePaths,
-          date: post.data().date,
-          id: post.data().id,
-        }
-        postsArr = postsArr.concat(postsObj)
-      })
+    if(querySnapshot.length === 0) { return postsArr }
+    querySnapshot.forEach((post) => {
+      postObj = {
+        ...postObj,
+        writerUID: post.data().writerUID,
+        writerPhotoURL: post.data().writerPhotoURL,
+        writerDisplayName: post.data().writerDisplayName,
+        content: post.data().content,
+        imagePaths: post.data().imagePaths,
+        date: post.data().date,
+        id: post.data().id,
+      }
+      postsArr = postsArr.concat(postObj)
     })
-    .then(() => {
-      dispatch({
-        type: LOAD_POSTS,
-        data: postsArr
-      })
+    
+    dispatch({
+      type: LOAD_POSTS,
+      data: postsArr
     })
-  }, [])
+  }
 
 
   useEffect(() => {
