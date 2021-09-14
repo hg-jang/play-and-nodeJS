@@ -313,7 +313,7 @@ const reducer = (state = initialState, action) => {
         currentGroup: {
           ...state.currentGroup,
           posts: state.currentGroup.posts.map((post) => {
-            if(post.id !== action.data.id) {
+            if(post.id !== action.data.postId) {
               return post
             }
             return {
@@ -349,7 +349,27 @@ const reducer = (state = initialState, action) => {
       }
     case DISLIKE_COMMENT:
       return {
-
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          posts: state.currentGroup.posts.map((post) => {
+            if(post.id !== action.data.postId) {
+              return post
+            }
+            return {
+              ...post,
+              comments: post.comments.map((comment) => {
+                if(comment.id !== action.data.commentId) {
+                  return comment
+                }
+                return {
+                  ...comment,
+                  like: comment.like.filter((like) => like !== action.data.who)
+                }
+              })
+            }
+          })
+        }
       }
     default:
       return state

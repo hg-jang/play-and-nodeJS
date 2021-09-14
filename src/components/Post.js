@@ -131,6 +131,7 @@ const Post = ({ post }) => {
           content: comment.data().content,
           date: comment.data().date,
           id: comment.data().id,
+          like: comment.data().like,
         }
         commentsArr = commentsArr.concat(commentObj)
       })

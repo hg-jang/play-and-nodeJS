@@ -30,6 +30,7 @@ const CommentForm = ({ post }) => {
       content: comment,
       id: id,
       date: getDate(),
+      like: [],
     }
     console.log(commentObj);
     fbaseFirestore.collection(group).doc('group data').collection('posts').doc(post.id).collection('comments').doc(id)
@@ -39,7 +40,7 @@ const CommentForm = ({ post }) => {
         type: ADD_COMMENT,
         data: {
           comment: commentObj,
-          id: post.id,
+          postId: post.id,
         }
       })
     })
