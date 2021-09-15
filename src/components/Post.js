@@ -161,14 +161,19 @@ const Post = ({ post }) => {
     <div className={styles.post}>
       <div className={styles.post_writer}>
         <img src={post.writerPhotoURL} alt="writer image" />
-        <div>{post.writerDisplayName}</div>
+        <div>
+          <span>{post.writerDisplayName}</span>
+          <span>{post.date.substring(0, 4)}년 {post.date.substring(4, 6)}월 {post.date.substring(6, 8)}일 {post.date.substring(9, 11)}시 {post.date.substring(11, 13)}분</span>
+        </div>
       </div>
       {!isEditing ?
       <> 
       <div className={styles.post_content}>
         {uid === post.writerUID &&
         <Button.Group>
-          <Button onClick={onClickEditPost}>수정</Button>
+          <Button icon>
+            <Icon name='edit' onClick={onClickEditPost} />
+          </Button>
           <Button icon>
             <Icon name="delete" onClick={onClickRemovePost} />
           </Button>
@@ -190,10 +195,10 @@ const Post = ({ post }) => {
         <TextArea placeholder={post.content} value={newPost} onChange={onChangeNewPost} />
         <div className={styles.post_buttons}>
           <input type="file" hidden ref={imageInputRef} onChange={onChangeImageInput} />
-          <Button secondary onClick={onClickUploadImage}>사진 추가</Button>
+          <Button secondary size="tiny" onClick={onClickUploadImage}>사진 추가</Button>
           <Button.Group>
-            <Button onClick={onClickCancle}>취소</Button>
-            <Button primary onClick={onClickFinishEdit}>수정</Button>
+            <Button size="tiny" onClick={onClickCancle}>취소</Button>
+            <Button primary size="tiny" onClick={onClickFinishEdit}>수정</Button>
           </Button.Group>
         </div>
         {imagePaths &&

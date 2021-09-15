@@ -55,6 +55,7 @@ export const INIT_IMAGEPATHS = 'INIT_IMAGEPATHS'
 export const INIT_EDITING_IMAGEPATHS = 'INIT_EDITING_IMAGEPATHS'
 
 export const ADD_COMMENT = 'ADD_COMMENT'
+export const REMOVE_COMMENT = 'REMOVE_COMMENT'
 
 export const LIKE_COMMENT = 'LIKE_COMMENT'
 export const DISLIKE_COMMENT = 'DISLIKE_COMMENT'
@@ -319,6 +320,22 @@ const reducer = (state = initialState, action) => {
             return {
               ...post,
               comments: [action.data.comment, ...post.comments]
+            }
+          })
+        }
+      }
+    case REMOVE_COMMENT:
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          posts: state.currentGroup.posts.map((post) => {
+            if(post.id !== action.data.postId) {
+              return post
+            }
+            return {
+              ...post,
+              comments: post.comments.filter((comment) => comment.id !== action.data.commentId)
             }
           })
         }

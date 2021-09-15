@@ -1,7 +1,7 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, TextArea } from "semantic-ui-react";
+import { Button } from "semantic-ui-react";
 import { fbaseFirestore } from "../fbase";
 import { v4 as uuidv4 } from 'uuid'
 import { ADD_COMMENT } from "../../reducers/group";
@@ -16,6 +16,7 @@ const CommentForm = ({ post }) => {
   const dispatch = useDispatch()
   const { currentUser } = useSelector((state) => state.auth)
   const [comment, onChangeComment, setComment] = useInput('')
+  const [isFocused, setIsFocused] = useState(false)
 
   const onClickCancel = useCallback(() => {
     setComment('')
@@ -50,17 +51,18 @@ const CommentForm = ({ post }) => {
     .then(() => {
       setComment('')
     })
-  }, [group, post, comment])
+  }, [post, comment])
 
   return (
     <div className={styles.comment_form}>
-      <TextArea placeholder="댓글을 적어주세요" value={comment} onChange={onChangeComment} />
+      <input type="text" className="input__text__underline" placeholder="댓글을 적어주세요" value={comment} onChange={onChangeComment} onFocus={() => {setIsFocused(true)}} onBlur={() => {setIsFocused(false)}} />
+      {isFocused &&
       <div>
         <Button.Group>
-          <Button onclick={onClickCancel}>취소</Button>
-          <Button primary onClick={onClickAddComment}>작성</Button>
+          <Button size="tiny" compact onClick={onClickCancel}>취소</Button>
+          <Button primary size="tiny" compact onClick={onClickAddComment}>작성</Button>
         </Button.Group>
-      </div>
+      </div>}
     </div>
   )
 }
