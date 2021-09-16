@@ -42,6 +42,7 @@ export const LOAD_GAMES = 'LOAD_GAMES'
 export const LOAD_MEMBERS = 'LOAD_MEMBERS'
 export const LOAD_POSTS = 'LOAD_POSTS'
 export const LOAD_COMMENTS = 'LOAD_COMMENTS'
+export const LOAD_CHATS = 'LOAD_CHATS'
 
 export const ADD_POST = 'ADD_POST'
 export const REMOVE_POST = 'REMOVE_POST'
@@ -59,6 +60,8 @@ export const REMOVE_COMMENT = 'REMOVE_COMMENT'
 
 export const LIKE_COMMENT = 'LIKE_COMMENT'
 export const DISLIKE_COMMENT = 'DISLIKE_COMMENT'
+
+export const ADD_CHAT = 'ADD_CHAT'
 
 export const CHANGE_CONTENT = 'CHANGE_CONTENT'
 
@@ -89,7 +92,6 @@ const reducer = (state = initialState, action) => {
         }
       }
     case LOAD_COMMENTS:
-      console.log('comments 로드 함');
       return {
         ...state,
         currentGroup: {
@@ -103,6 +105,14 @@ const reducer = (state = initialState, action) => {
               comments: action.data.comments,
             }
           })
+        }
+      }
+    case LOAD_CHATS:
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          chats: action.data,
         }
       }
     case CHANGE_CONTENT:
@@ -386,6 +396,14 @@ const reducer = (state = initialState, action) => {
               })
             }
           })
+        }
+      }
+    case ADD_CHAT:
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          chats: [...state.currentGroup.chats, action.data],
         }
       }
     default:
