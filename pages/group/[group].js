@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { fbaseFirestore } from '../../src/fbase'
-import { LOAD_POSTS, LOAD_GAMES, LOAD_MEMBERS } from '../../reducers/group'
+import { LOAD_POSTS, LOAD_GAMES, LOAD_MEMBERS, LOAD_CHATS } from '../../reducers/group'
 import Ranking from "../../src/components/Ranking"
 import MemberList from "../../src/components/MemberList"
 import Community from "../../src/components/Community"
@@ -114,12 +114,46 @@ const group_index = () => {
     })
   }
 
+  const loadChats = () => {
+    let chatsArr = []
+
+    fbaseFirestore.collection(group).doc('group data').collection('chats').orderBy('date')
+    .get()
+    .then((chats) => {
+      chats.forEach((chat) => {
+        if(!chat.exists) {
+          return chatsArr
+        } else {
+          const chatObj = {
+            id: chat.data().id,
+            date: chat.data().date,
+            content: chat.data().content,
+            chatWriterUID: chat.data().chatWriterUID,
+            chatWriterDisplayName: chat.data().chatWriterDisplayName,
+            chatWriterPhotoURL: chat.data().chatWriterPhotoURL,
+          }
+          chatsArr = [...chatsArr, chatObj]
+        }
+      })
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+    .then(() => {
+      dispatch({
+        type: LOAD_CHATS,
+        data: chatsArr,
+      })
+    })
+  }
+
 
   useEffect(() => {
     if(router.query.group) {
       loadGames()
       loadMembers()
       loadPosts()
+      loadChats()
     }
   }, [router])
 

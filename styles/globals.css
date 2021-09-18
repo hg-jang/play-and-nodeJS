@@ -17,6 +17,20 @@ a img {border: none;}
 li {list-style: none;}
 address, em, i {font-style: normal;}
 
+/* FLOAT & CLEARFIX */
+.float__left{
+  float: left;
+}
+.float__right{
+  float: right;
+}
+.clearfix::after{
+  content: '';
+  clear: both;
+  display: block;
+}
+
+
 #main{width: 100%; height: 100vh;}
 
 /* LOADING */
