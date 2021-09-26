@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { fbaseFirestore } from '../../src/fbase'
-import { LOAD_POSTS, LOAD_GAMES, LOAD_MEMBERS, LOAD_CHATS } from '../../reducers/group'
+import { LOAD_POSTS, LOAD_GAMES, LOAD_MEMBERS, ADD_CHAT } from '../../reducers/group'
 import Ranking from "../../src/components/Ranking"
 import MemberList from "../../src/components/MemberList"
 import Community from "../../src/components/Community"
@@ -114,35 +114,63 @@ const group_index = () => {
     })
   }
 
-  const loadChats = () => {
-    let chatsArr = []
+  // const loadChats = () => {
+  //   let chatsArr = []
 
+  //   fbaseFirestore.collection(group).doc('group data').collection('chats').orderBy('date')
+  //   .get()
+  //   .then((chats) => {
+  //     chats.forEach((chat) => {
+  //       if(!chat.exists) {
+  //         return chatsArr
+  //       } else {
+  //         const chatObj = {
+  //           id: chat.data().id,
+  //           date: chat.data().date,
+  //           content: chat.data().content,
+  //           chatWriterUID: chat.data().chatWriterUID,
+  //           chatWriterDisplayName: chat.data().chatWriterDisplayName,
+  //           chatWriterPhotoURL: chat.data().chatWriterPhotoURL,
+  //         }
+  //         chatsArr = [...chatsArr, chatObj]
+  //       }
+  //     })
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   })
+  //   .then(() => {
+  //     dispatch({
+  //       type: LOAD_CHATS,
+  //       data: chatsArr,
+  //     })
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   })
+  // }
+
+  const loadChatsRealtime = () => {
     fbaseFirestore.collection(group).doc('group data').collection('chats').orderBy('date')
-    .get()
-    .then((chats) => {
-      chats.forEach((chat) => {
-        if(!chat.exists) {
-          return chatsArr
-        } else {
+    .onSnapshot((chats) => {
+      console.log('onSnapshot 반응');
+      chats.docChanges().forEach((change) => {
+        console.log('새로운 chat :', change.doc.data());
+        if(change.type === 'added') {
+          console.log('added 감지 성공');
           const chatObj = {
-            id: chat.data().id,
-            date: chat.data().date,
-            content: chat.data().content,
-            chatWriterUID: chat.data().chatWriterUID,
-            chatWriterDisplayName: chat.data().chatWriterDisplayName,
-            chatWriterPhotoURL: chat.data().chatWriterPhotoURL,
+            id: change.doc.data().id,
+            date: change.doc.data().date,
+            content: change.doc.data().content,
+            chatWriterUID: change.doc.data().chatWriterUID,
+            chatWriterDisplayName: change.doc.data().chatWriterDisplayName,
+            chatWriterPhotoURL: change.doc.data().chatWriterPhotoURL,
           }
-          chatsArr = [...chatsArr, chatObj]
+          dispatch({
+            type: ADD_CHAT,
+            data: chatObj,
+          })
         }
-      })
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-    .then(() => {
-      dispatch({
-        type: LOAD_CHATS,
-        data: chatsArr,
       })
     })
   }
@@ -153,9 +181,14 @@ const group_index = () => {
       loadGames()
       loadMembers()
       loadPosts()
-      loadChats()
+      // loadChats()
+      loadChatsRealtime()
     }
   }, [router])
+
+  useEffect(() => {
+
+  }, [])
 
   return (
     <>

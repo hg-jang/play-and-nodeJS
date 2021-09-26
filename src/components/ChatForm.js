@@ -5,15 +5,13 @@ import { fbaseFirestore } from '../fbase'
 import useInput from '../../hooks/useInput'
 import { v4 as uuidv4 } from 'uuid'
 import { getDate } from './PostForm'
-import { useDispatch, useSelector } from 'react-redux'
-import { ADD_CHAT } from '../../reducers/group'
+import { useSelector } from 'react-redux'
 import styles from '../css/group.module.css'
 
 const ChatForm = () => {
   const router = useRouter()
   const { group } = router.query
 
-  const dispatch = useDispatch()
   const { currentUser } = useSelector((state) => state.auth)
 
   const [chat, onChangeChat, setChat] = useInput('')
@@ -32,12 +30,6 @@ const ChatForm = () => {
 
     fbaseFirestore.collection(group).doc('group data').collection('chats').doc(id)
     .set(chatObj)
-    .then(() => {
-      dispatch({
-        type: ADD_CHAT,
-        data: chatObj,
-      })
-    })
     .catch((error) => {
       console.log(error);
     })

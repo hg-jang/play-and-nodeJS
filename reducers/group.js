@@ -11,7 +11,9 @@ export const initialState = {
   imagePaths: [],
   editingImagePaths: [],
   content: 'community',
-  currentGroup: {},
+  currentGroup: {
+    chats: [],
+  },
 }
 
 export const UPLOAD_POST_IMAGE_REQUEST = 'UPLOAD_POST_IMAGE_REQUEST'
@@ -42,7 +44,7 @@ export const LOAD_GAMES = 'LOAD_GAMES'
 export const LOAD_MEMBERS = 'LOAD_MEMBERS'
 export const LOAD_POSTS = 'LOAD_POSTS'
 export const LOAD_COMMENTS = 'LOAD_COMMENTS'
-export const LOAD_CHATS = 'LOAD_CHATS'
+// export const LOAD_CHATS = 'LOAD_CHATS'
 
 export const ADD_POST = 'ADD_POST'
 export const REMOVE_POST = 'REMOVE_POST'
@@ -107,14 +109,14 @@ const reducer = (state = initialState, action) => {
           })
         }
       }
-    case LOAD_CHATS:
-      return {
-        ...state,
-        currentGroup: {
-          ...state.currentGroup,
-          chats: action.data,
-        }
-      }
+    // case LOAD_CHATS:
+    //   return {
+    //     ...state,
+    //     currentGroup: {
+    //       ...state.currentGroup,
+    //       chats: action.data,
+    //     }
+    //   }
     case CHANGE_CONTENT:
       return {
         ...state,
