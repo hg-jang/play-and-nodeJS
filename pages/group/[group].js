@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { fbaseFirestore } from '../../src/fbase'
-import { LOAD_POSTS, LOAD_GAMES, LOAD_MEMBERS, ADD_CHAT } from '../../reducers/group'
+import { ADD_CHAT } from '../../reducers/group'
 import Ranking from "../../src/components/Ranking"
 import MemberList from "../../src/components/MemberList"
 import Community from "../../src/components/Community"
@@ -16,103 +16,6 @@ const group_index = () => {
   
   const dispatch = useDispatch()
   const { content, currentGroup } = useSelector((state) => state.group)
-
-  const loadGames = () => {
-    let gamesArr = []
-    fbaseFirestore.collection(group).doc('group data').collection('games')
-    .get()
-    .then((games) => {
-      games.forEach((game) => {
-        const gameObj = {
-          winnerRatingAfter: game.data().winnerRatingAfter,
-          loserRatingAfter: game.data().loserRatingAfter,
-          winners: game.data().winners,
-          losers: game.data().losers,
-          ratingChange: game.data().ratingChange,
-          percentage: game.data().percentage,
-          date: game.data().date,
-          time: game.data().writeTime,
-          id: `${game.data().date}-${game.data().writeTime}`,
-        }
-        gamesArr = gamesArr.concat(gameObj)
-      })
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-    .then(() => {
-      dispatch({
-        type: LOAD_GAMES,
-        data: gamesArr,
-      })
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-  }
-
-  const loadMembers = () => {
-    let membersArr = []
-
-    fbaseFirestore.collection(group).doc('group data').collection('members')
-    .get()
-    .then((members) => {
-      members.forEach((member) => {
-        const memberObj = {
-          displayName: member.data().displayName,
-          photoURL: member.data().photoURL,
-          uid: member.data().uid,
-          joinedDate: member.data().joinedDate,
-          rating: member.data().rating,
-          start_rating: member.data().start_rating,
-          allGames: member.data().allGames,
-          winnedGames: member.data().winnedGames,
-          losedGames: member.data().losedGames,
-          status: member.data().status,
-        }
-        membersArr = membersArr.concat(memberObj)
-      })
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-    .then(() => {
-      dispatch({
-        type: LOAD_MEMBERS,
-        data: membersArr,
-      })
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-  }
-
-  const loadPosts = async () => {
-    let postsArr = []
-    let postObj = {}
-
-    const querySnapshot = await fbaseFirestore.collection(group).doc('group data').collection('posts').orderBy('date', "desc").get()
-
-    if(querySnapshot.length === 0) { return postsArr }
-    querySnapshot.forEach((post) => {
-      postObj = {
-        ...postObj,
-        writerUID: post.data().writerUID,
-        writerPhotoURL: post.data().writerPhotoURL,
-        writerDisplayName: post.data().writerDisplayName,
-        content: post.data().content,
-        imagePaths: post.data().imagePaths,
-        date: post.data().date,
-        id: post.data().id,
-      }
-      postsArr = postsArr.concat(postObj)
-    })
-    
-    dispatch({
-      type: LOAD_POSTS,
-      data: postsArr
-    })
-  }
 
   // const loadChats = () => {
   //   let chatsArr = []
@@ -178,17 +81,10 @@ const group_index = () => {
 
   useEffect(() => {
     if(router.query.group) {
-      loadGames()
-      loadMembers()
-      loadPosts()
       // loadChats()
       loadChatsRealtime()
     }
   }, [router])
-
-  useEffect(() => {
-
-  }, [])
 
   return (
     <>
