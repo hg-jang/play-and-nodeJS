@@ -1,9 +1,11 @@
-import { React, useEffect, useState } from 'react';
+import { React, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import AdminConfig from '../../src/components/AdminConfig'
-import AdminRecording from '../../src/components/AdminRecording'
-import AdminMembers from '../../src/components/AdminMembers'
-import styles from '../../src/css/admin-group.module.css'
+import { CHANGE_CONTENT } from '../../reducers/group';
+import AdminDashboard from '../../src/components/Admin_Dashboard';
+import AdminConfig from '../../src/components/Admin_Config'
+import AdminRecording from '../../src/components/Admin_Recording'
+import AdminMembers from '../../src/components/Admin_Members'
+import styles from '../../src/css/admin_group.module.css'
 import { useRouter } from "next/router"
 import { dbService } from '../../src/fbase'
 // import styles from '../../src/admin/css/Admin.module.css'
@@ -13,7 +15,6 @@ import RegiMatch from '../../src/admin/component/RegiMatch'
 import UserList from '../../src/admin/component/UserList'
 import MatchList from '../../src/admin/component/MatchList'
 import GroupJoinWant from '../../src/admin/component/GroupJoinWant'
-import { CHANGE_CONTENT } from '../../reducers/group';
 
 const admin_main = () => {
   const { content } = useSelector((state) => state.group)
@@ -70,7 +71,7 @@ const admin_main = () => {
   useEffect(() => {
     dispatch({
       type: CHANGE_CONTENT,
-      data: 'admin-config',
+      data: 'admin-dashboard',
     })
   }, [])
   return (
@@ -85,6 +86,7 @@ const admin_main = () => {
     //   </div>
     // </div>
     <div className={styles.admin_container}>
+      {content === 'admin-dashboard' && <AdminDashboard />}
       {content === 'admin-config' && <AdminConfig />}
       {content === 'admin-recording' && <AdminRecording />}
       {content === 'admin-members' && <AdminMembers />}

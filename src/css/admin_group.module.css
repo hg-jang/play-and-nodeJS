@@ -1,0 +1,111 @@
+.admin_group_grid{
+  display: grid; grid-template-columns: 260px calc(100% - 260px);
+  height: 100%;
+}
+
+
+
+/* Nav in Admin */
+/* Nav in Admin */
+/* Nav in Admin */
+.admin_group_grid > .nav{
+  display: flex; flex-direction: column;
+  width: 100%; height: 100%; padding-top: 12px;
+  background-color: #fff;
+}
+.nav > div{
+  display: flex; flex-direction: column; align-items: center;
+  width: 100%; margin-bottom: 24px;
+}
+.nav > div > h1{
+  margin-bottom: 12px;
+  font-size: 24px;
+}
+.nav > div > img{
+  width: 180px; height: 180px; border-radius: 50%;
+}
+.nav > ul > li{
+  height: 52px; padding-left: 24px;
+  font-size: 24px; line-height: 52px; color: #101820;
+  cursor: pointer; transition: .5s;
+}
+.nav > ul > li:hover{
+  background-color: #101820;
+  color: #fff;
+}
+.nav > ul > li:hover > i{
+  color: #fff;
+}
+.nav > ul > li > i{
+  margin-right: 8px;
+}
+
+
+
+
+
+
+
+.admin_group_grid > .admin_container{
+  width: 100%; height: 100%;
+  background-color: #ecf0f1;
+}
+
+/* Dashboard in Admin */
+/* Dashboard in Admin */
+/* Dashboard in Admin */
+.admin_group_grid > .admin_container > .admin_dashboard{
+  display: grid; grid-template-rows: 40% 60%; grid-template-columns: repeat(3, 1fr);
+  grid-template-areas: 
+  "members posts chats"
+  "chart chart chart";
+  height: 100%;
+}
+.admin_dashboard > div{
+  margin: 12px;
+  background-color: #c4e3f0; border: 1px solid #000;
+  font-size: 36px;
+}
+.admin_dashboard > .members{
+  grid-area: members;
+}
+.admin_dashboard > .posts{
+  grid-area: posts;
+}
+.admin_dashboard > .chats{
+  grid-area: chats;
+}
+.admin_dashboard > .chart{
+  grid-area: chart;
+  margin-top: 12px;
+}
+
+
+/* Members in Admin */
+/* Members in Admin */
+/* Members in Admin */
+.admin_group_grid > .admin_container > .admin_members{
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  height: 100%;
+}
+.admin_members > div{
+  display: flex; justify-content: center; align-items: center;
+}
+.admin_members > div > div{
+  display: flex; flex-direction: column; align-items: center;
+  width: 460px; height: 90%;
+  background-color: #fff; box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.admin_members > div > div > h1{
+  padding: 12px 0;
+  font-size: 24px;
+}
+.admin_members .whole_users{
+  
+}
+.admin_members .whole_users > h1{}
+
+
+.admin_members .awaitors{
+
+}

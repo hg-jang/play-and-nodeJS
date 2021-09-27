@@ -1,7 +1,6 @@
 import React from 'react'
-import { useRouter } from "next/router";
 import Admin_Nav from "../components/Admin_Nav"
-import styles from '../css/admin-group.module.css'
+import styles from '../css/admin_group.module.css'
 
 const AdminLayout = ({ children }) => {
 
