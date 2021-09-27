@@ -1,10 +1,15 @@
+import React from 'react'
+import { useRouter } from "next/router";
+import Admin_Nav from "../components/Admin_Nav"
+import styles from '../css/admin-group.module.css'
+
 const AdminLayout = ({ children }) => {
+
   return (
-    <>
-      <h1>Admin Layout top</h1>
+    <div className={styles.admin_group_grid}>
+      <Admin_Nav />
       { children }
-      <h1>Adimn Layout bot</h1>
-    </>
+    </div>
   )
 }
 
