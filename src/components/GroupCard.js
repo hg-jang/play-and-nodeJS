@@ -108,17 +108,23 @@ const GroupCard = ({ group, index }) => {
     })
   }
 
+  // 일반 사용자 페이지 접속 시 먼저 불러올 데이터들
   const onClickSetGroup = useCallback(() => {
     loadGames()
     loadMembers()
     loadPosts()
   }, [group])
 
+  // 관리자 페이지 접속 시 먼저 불러올 데이터들
+  const onClickSetAdmin = useCallback(() => {
+    loadMembers()
+  }, [group])
+
   return (
     <div className={styles.group_card} key={index}>
       <div className={styles.group_image}>
         <img src={defaultSrc} alt="team profile" />
-        {group.isAdmin === true ? <Link href={`/admin/${group.groupName}`}><a><Icon fitted className={styles.setting} name='setting' size='large' /></a></Link> : <></>}
+        {group.isAdmin === true ? <Link href={`/admin/${group.groupName}`}><a><Icon fitted className={styles.setting} name='setting' size='large' onClick={onClickSetAdmin} /></a></Link> : <></>}
       </div>
       <h1 className={styles.team_name} onClick={onClickSetGroup}><Link href={`/group/${group.groupName}`}><a>{group.groupName}</a></Link></h1>
       <h2 className={styles.group_introduce}>{group.groupIntroduce}</h2>
