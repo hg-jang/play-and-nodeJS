@@ -44,7 +44,7 @@ export const LOAD_GAMES = 'LOAD_GAMES'
 export const LOAD_MEMBERS = 'LOAD_MEMBERS'
 export const LOAD_POSTS = 'LOAD_POSTS'
 export const LOAD_COMMENTS = 'LOAD_COMMENTS'
-// export const LOAD_CHATS = 'LOAD_CHATS'
+export const LOAD_AWAITORS = 'LOAD_AWAITORS'
 
 export const ADD_POST = 'ADD_POST'
 export const REMOVE_POST = 'REMOVE_POST'
@@ -109,14 +109,15 @@ const reducer = (state = initialState, action) => {
           })
         }
       }
-    // case LOAD_CHATS:
-    //   return {
-    //     ...state,
-    //     currentGroup: {
-    //       ...state.currentGroup,
-    //       chats: action.data,
-    //     }
-    //   }
+    case LOAD_AWAITORS:
+      console.log(action.data);
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          awaitors: action.data,
+        }
+      }
     case CHANGE_CONTENT:
       return {
         ...state,

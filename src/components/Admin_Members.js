@@ -4,15 +4,16 @@ import styles from '../css/admin_group.module.css'
 
 const AdminMembers = () => {
   const members = useSelector((state) => state.group.currentGroup?.members).concat().sort((a, b) => a.displayName = b.displayName)
+  const awaitors = useSelector((state) => state.group.currentGroup?.awaitors).concat().sort((a, b) => a.displayName = b.displayName)
 
   return (
     <div className={styles.admin_members}>
       <div>
-        <div className={styles.whole_members}>
+        <div className={styles.members_box}>
           <h1>전체 멤버 목록</h1>
           <div>
             {members.map((member, index) => (
-              <div className={styles.member}>
+              <div className={styles.member} key={index}>
                 <img src={member.photoURL} alt="member profile" />
                 <div>
                   <span>{member.displayName}</span>
@@ -30,8 +31,24 @@ const AdminMembers = () => {
         </div>
       </div>
       <div>
-        <div className={styles.awaitors}>
+        <div className={styles.awaitors_box}>
           <h1>가입 대기자 목록</h1>
+          {awaitors ? 
+          <div className={styles.awaitors}>
+            {awaitors.map((awaitor, index) => (
+              <div className={styles.awaitor} key={index}>
+                <img src={awaitor.photoURL} alt="awaitor profile" />
+                <div>
+                  <div>{awaitor.displayName}</div>
+                  <span>승인</span>
+                  <span>거절</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          :
+          <div className={styles.no_awaitors}>가입 대기자 없습니다.</div>
+          }
         </div>
       </div>
     </div>

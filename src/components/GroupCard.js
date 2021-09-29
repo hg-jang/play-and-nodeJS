@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { fbaseFirestore } from '../fbase'
-import { LOAD_POSTS, LOAD_GAMES, LOAD_MEMBERS } from '../../reducers/group'
+import { LOAD_POSTS, LOAD_GAMES, LOAD_MEMBERS, LOAD_AWAITORS } from '../../reducers/group'
 import Link from 'next/link'
 import { Icon } from 'semantic-ui-react'
 import styles from '../css/my-groups.module.css'
@@ -108,6 +108,36 @@ const GroupCard = ({ group, index }) => {
     })
   }
 
+  const loadAwaitors = () => {
+    let awaitorsArr = []
+
+    fbaseFirestore.collection(group.groupName).doc('group data').collection('awaitors')
+    .get()
+    .then((awaitors) => {
+      awaitors.forEach((awaitor) => {
+        console.log(awaitor);
+        const awaitorObj = {
+          displayName: awaitor.data().displayName,
+          photoURL: awaitor.data().photoURL,
+          uid: awaitor.data().uid,
+        }
+        awaitorsArr = awaitorsArr.concat(awaitorObj)
+      })
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+    .then(() => {
+      dispatch({
+        type: LOAD_AWAITORS,
+        data: awaitorsArr,
+      })
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
+
   // 일반 사용자 페이지 접속 시 먼저 불러올 데이터들
   const onClickSetGroup = useCallback(() => {
     loadGames()
@@ -118,6 +148,7 @@ const GroupCard = ({ group, index }) => {
   // 관리자 페이지 접속 시 먼저 불러올 데이터들
   const onClickSetAdmin = useCallback(() => {
     loadMembers()
+    loadAwaitors()
   }, [group])
 
   return (
