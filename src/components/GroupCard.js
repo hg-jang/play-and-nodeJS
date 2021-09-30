@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { fbaseFirestore } from '../fbase'
-import { LOAD_POSTS, LOAD_GAMES, LOAD_MEMBERS, LOAD_AWAITORS } from '../../reducers/group'
+import { LOAD_POSTS, LOAD_GAMES, LOAD_MEMBERS, LOAD_GROUP_INFO, LOAD_AWAITORS } from '../../reducers/group'
 import Link from 'next/link'
 import { Icon } from 'semantic-ui-react'
 import styles from '../css/my-groups.module.css'
@@ -108,6 +108,25 @@ const GroupCard = ({ group, index }) => {
     })
   }
 
+  const loadGroupInfo = () => {
+    fbaseFirestore.collection(group.groupName).doc('group information')
+    .get()
+    .then((doc) => {
+      dispatch({
+        type: LOAD_GROUP_INFO,
+        data: {
+          createdDate: doc.data().createdDate,
+          groupIntroduce: doc.data().groupIntroduce,
+          groupName: doc.data().groupName,
+          numberOfMember: doc.data().numberOfMember,
+        }
+      })
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
+
   const loadAwaitors = () => {
     let awaitorsArr = []
 
@@ -147,6 +166,7 @@ const GroupCard = ({ group, index }) => {
 
   // 관리자 페이지 접속 시 먼저 불러올 데이터들
   const onClickSetAdmin = useCallback(() => {
+    loadGroupInfo()
     loadMembers()
     loadAwaitors()
   }, [group])

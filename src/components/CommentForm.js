@@ -5,7 +5,7 @@ import { Button } from "semantic-ui-react";
 import { fbaseFirestore } from "../fbase";
 import { v4 as uuidv4 } from 'uuid'
 import { ADD_COMMENT } from "../../reducers/group";
-import { getDate } from "./PostForm";
+import { getDateWithTime } from "./PostForm";
 import useInput from "../../hooks/useInput";
 import styles from '../css/group.module.css'
 
@@ -30,7 +30,7 @@ const CommentForm = ({ post }) => {
       commentWriterDisplayName: currentUser.displayName,
       content: comment,
       id: id,
-      date: getDate(),
+      date: getDateWithTime(),
       like: [],
     }
     console.log(commentObj);

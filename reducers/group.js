@@ -40,11 +40,19 @@ export const REMOVE_EDITING_IMAGE_REQUEST = 'REMOVE_EDITING_IMAGE_REQUEST'
 export const REMOVE_EDITING_IMAGE_SUCCESS = 'REMOVE_EDITING_IMAGE_SUCCESS'
 export const REMOVE_EDITING_IMAGE_FAILURE = 'REMOVE_EDITING_IMAGE_FAILURE'
 
+export const REMOVE_AWAITOR = 'REMOVE_AWAITOR'
+
+export const ADD_MEMBER = 'ADD_MEMBER'
+export const REMOVE_MEMBER = 'REMOVE_MEMBER'
+
+export const LOAD_GROUP_INFO = 'LOAD_GROUP_INFO'
 export const LOAD_GAMES = 'LOAD_GAMES'
 export const LOAD_MEMBERS = 'LOAD_MEMBERS'
 export const LOAD_POSTS = 'LOAD_POSTS'
 export const LOAD_COMMENTS = 'LOAD_COMMENTS'
 export const LOAD_AWAITORS = 'LOAD_AWAITORS'
+
+export const EDIT_GROUP_INFO = 'EDIT_GROUP_INFO'
 
 export const ADD_POST = 'ADD_POST'
 export const REMOVE_POST = 'REMOVE_POST'
@@ -69,6 +77,17 @@ export const CHANGE_CONTENT = 'CHANGE_CONTENT'
 
 const reducer = (state = initialState, action) => {
   switch(action.type) {
+    case LOAD_GROUP_INFO:
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          createdDate: action.data.createdDate,
+          groupIntroduce: action.data.groupIntroduce,
+          groupName: action.data.groupName,
+          numberOfMember: action.data.numberOfMember,
+        }
+      }
     case LOAD_GAMES:
       return {
         ...state,
@@ -137,6 +156,17 @@ const reducer = (state = initialState, action) => {
           }
           return null
         })
+      }
+    case EDIT_GROUP_INFO:
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          createdDate: action.data.createdDate ? action.data.createdDate : state.currentGroup.createdDate, 
+          groupIntroduce: action.data.groupIntroduce ? action.data.groupIntroduce : state.currentGroup.groupIntroduce,
+          groupName:  action.data.groupName ? action.data.groupName : state.currentGroup.groupName,
+          numberOfMember: action.data.numberOfMember ? action.data.numberOfMember : state.currentGroup.numberOfMember,
+        }
       }
     case ADD_POST:
       return {
@@ -407,6 +437,30 @@ const reducer = (state = initialState, action) => {
         currentGroup: {
           ...state.currentGroup,
           chats: [...state.currentGroup.chats, action.data],
+        }
+      }
+    case REMOVE_AWAITOR:
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          awaitors: state.currentGroup.awaitors.filter((awaitor) => awaitor.uid !== action.data)
+        }
+      }
+    case ADD_MEMBER:
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          members: [...state.currentGroup.members, action.data],
+        }
+      }
+    case REMOVE_MEMBER:
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          members: state.currentGroup.members.filter((member) => member.uid !== action.data)
         }
       }
     default:

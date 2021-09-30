@@ -17,42 +17,6 @@ const group_index = () => {
   const dispatch = useDispatch()
   const { content, currentGroup } = useSelector((state) => state.group)
 
-  // const loadChats = () => {
-  //   let chatsArr = []
-
-  //   fbaseFirestore.collection(group).doc('group data').collection('chats').orderBy('date')
-  //   .get()
-  //   .then((chats) => {
-  //     chats.forEach((chat) => {
-  //       if(!chat.exists) {
-  //         return chatsArr
-  //       } else {
-  //         const chatObj = {
-  //           id: chat.data().id,
-  //           date: chat.data().date,
-  //           content: chat.data().content,
-  //           chatWriterUID: chat.data().chatWriterUID,
-  //           chatWriterDisplayName: chat.data().chatWriterDisplayName,
-  //           chatWriterPhotoURL: chat.data().chatWriterPhotoURL,
-  //         }
-  //         chatsArr = [...chatsArr, chatObj]
-  //       }
-  //     })
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   })
-  //   .then(() => {
-  //     dispatch({
-  //       type: LOAD_CHATS,
-  //       data: chatsArr,
-  //     })
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   })
-  // }
-
   const loadChatsRealtime = () => {
     fbaseFirestore.collection(group).doc('group data').collection('chats').orderBy('date')
     .onSnapshot((chats) => {

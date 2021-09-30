@@ -4,7 +4,7 @@ import { Icon } from 'semantic-ui-react'
 import { fbaseFirestore } from '../fbase'
 import useInput from '../../hooks/useInput'
 import { v4 as uuidv4 } from 'uuid'
-import { getDate } from './PostForm'
+import { getDateWithTime } from './PostForm'
 import { useSelector } from 'react-redux'
 import styles from '../css/group.module.css'
 
@@ -21,7 +21,7 @@ const ChatForm = () => {
 
     const chatObj = {
       id: id,
-      date: getDate(),
+      date: getDateWithTime(),
       content: chat,
       chatWriterUID: currentUser.uid,
       chatWriterDisplayName: currentUser.displayName,

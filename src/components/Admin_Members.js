@@ -1,5 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
+import Admin_Members_Member from './Admin_Members_Member'
+import Admin_Members_Awaitor from './Admin_Members_Awaitor'
 import styles from '../css/admin_group.module.css'
 
 const AdminMembers = () => {
@@ -13,19 +15,7 @@ const AdminMembers = () => {
           <h1>전체 멤버 목록</h1>
           <div>
             {members.map((member, index) => (
-              <div className={styles.member} key={index}>
-                <img src={member.photoURL} alt="member profile" />
-                <div>
-                  <span>{member.displayName}</span>
-                  <span>{member.status}</span>
-                  <span>가입일 : {member.joinedDate}</span>
-                </div>
-                <ul>
-                  <li>강퇴</li>
-                  <li>권한 부여</li>
-                  <li>뱃지 부여</li>
-                </ul>
-              </div>
+              <Admin_Members_Member member={member} index={index} />
             ))}
           </div>
         </div>
@@ -33,17 +23,10 @@ const AdminMembers = () => {
       <div>
         <div className={styles.awaitors_box}>
           <h1>가입 대기자 목록</h1>
-          {awaitors ? 
+          {awaitors ?
           <div className={styles.awaitors}>
             {awaitors.map((awaitor, index) => (
-              <div className={styles.awaitor} key={index}>
-                <img src={awaitor.photoURL} alt="awaitor profile" />
-                <div>
-                  <div>{awaitor.displayName}</div>
-                  <span>승인</span>
-                  <span>거절</span>
-                </div>
-              </div>
+              <Admin_Members_Awaitor awaitor={awaitor} index={index} />
             ))}
           </div>
           :

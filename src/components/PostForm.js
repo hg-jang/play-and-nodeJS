@@ -8,7 +8,7 @@ import styles from '../css/group.module.css'
 import { fbaseFirestore } from '../fbase';
 import { v4 as uuidv4 } from 'uuid'
 
-export const getDate = () => {
+export const getDateWithTime = () => {
   const today = new Date()
 
   const year = today.getFullYear()
@@ -65,7 +65,7 @@ const PostForm = () => {
       writerDisplayName: currentUser.displayName,
       content: post,
       imagePaths: imagePaths,
-      date: getDate(),
+      date: getDateWithTime(),
       id: id,
     }
 

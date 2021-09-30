@@ -5,6 +5,18 @@ import { fbaseFirestore } from '../src/fbase'
 import styles from "../src/css/create-group.module.css"
 import classNames from 'classnames'
 
+export const getDate = () => {
+  const today = new Date()
+  const year = today.getFullYear()
+  let month = today.getMonth() + 1
+  let date = today.getDate()
+
+  month = month >= 10 ? month : `0${month}`
+  date = date >= 10 ? date : `0${date}`
+
+  return Number(`${year}${month}${date}`)
+}
+
 const create_group = () => {
   const { currentUser } = useSelector((state) => state.auth)
 
@@ -24,18 +36,6 @@ const create_group = () => {
     })
   }
 
-  function getToday() {
-    const today = new Date()
-    const year = today.getFullYear()
-    let month = today.getMonth() + 1
-    let date = today.getDate()
-
-    month = month >= 10 ? month : `0${month}`
-    date = date >= 10 ? date : `0${date}`
-
-    return Number(`${year}${month}${date}`)
-  }
-
   const onClickCreateGroup = () => {
     if(groupName.length === 0) {
       alert('그룹 이름을 입력 해주세요.')
@@ -53,7 +53,7 @@ const create_group = () => {
             fbaseFirestore.collection(groupName).doc('group information').set(groupInfo)
             .then(() => {
               fbaseFirestore.collection(groupName).doc('group information').set({
-                createdDate: getToday(),
+                createdDate: getDate(),
                 numberOfMember: 1
               }, { merge: true})
             })
@@ -70,7 +70,7 @@ const create_group = () => {
                 displayName: currentUser.displayName,
                 uid: currentUser.uid,
                 photoURL: currentUser.photoURL,
-                joinedDate: getToday(),
+                joinedDate: getDate(),
               })
             })
             // whole_users - 유저.uid 문서 - 가입한 그룹 collection 에 생성 한 그룹 문서 추가
@@ -80,8 +80,8 @@ const create_group = () => {
                 groupName: groupName,
                 groupIntroduce: groupIntroduce,
                 isAdmin: true,
-                joinedDate: getToday(),
-                createdDate: getToday(),
+                joinedDate: getDate(),
+                createdDate: getDate(),
                 numberOfMember: 1
               }, { merge: true })
             })
