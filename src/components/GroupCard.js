@@ -134,7 +134,6 @@ const GroupCard = ({ group, index }) => {
     .get()
     .then((awaitors) => {
       awaitors.forEach((awaitor) => {
-        console.log(awaitor);
         const awaitorObj = {
           displayName: awaitor.data().displayName,
           photoURL: awaitor.data().photoURL,
@@ -175,7 +174,7 @@ const GroupCard = ({ group, index }) => {
     <div className={styles.group_card} key={index}>
       <div className={styles.group_image}>
         <img src={defaultSrc} alt="team profile" />
-        {group.isAdmin === true ? <Link href={`/admin/${group.groupName}`}><a><Icon fitted className={styles.setting} name='setting' size='large' onClick={onClickSetAdmin} /></a></Link> : <></>}
+        {group.isAdmin === true ? <div className={styles.admin_button} onClick={onClickSetAdmin}><Link href={`/admin/${group.groupName}`}><a><Icon fitted name='setting' size='large' /></a></Link></div> : <></>}
       </div>
       <h1 className={styles.team_name} onClick={onClickSetGroup}><Link href={`/group/${group.groupName}`}><a>{group.groupName}</a></Link></h1>
       <h2 className={styles.group_introduce}>{group.groupIntroduce}</h2>

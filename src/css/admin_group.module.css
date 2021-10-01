@@ -80,6 +80,129 @@
   margin-top: 12px;
 }
 
+/* Recording in Admin */
+/* Recording in Admin */
+/* Recording in Admin */
+.admin_group_grid > .admin_container > .admin_recording{
+  height: 100%; padding: 16px;
+}
+.admin_recording > .record_form{
+  display: flex; flex-direction: column; align-items: center;
+  width: 550px;
+}
+.admin_recording > .record_form > .title_box{
+  display: flex;
+  width: 100%; margin-bottom: 12px; padding: 8px;
+}
+.admin_recording > .record_form > .title_box > h1{
+  width: 50%;
+  font-size: 24px; text-align: center;
+}
+.admin_recording > .record_form > .date_box{
+  display: flex; justify-content: flex-end; align-items: center;
+  width: 100%; margin-bottom: 8px;
+}
+.admin_recording > .record_form > .date_box > div:first-child{
+  margin-right: 8px;
+}
+.admin_recording > .record_form > .date_box > div:nth-child(2){
+  margin-right: 8px;
+}
+.admin_recording > .record_form > .date_box ul{
+  max-height: 300px;
+  overflow: auto;
+  scrollbar-color: rgba(116, 185, 255, .5) rgba(255, 255, 255, 0); scrollbar-width: thin;
+}
+.admin_recording > .record_form > .search_box{
+  display: flex; justify-content: space-between;
+  width: 100%; margin-bottom: 8px; padding: 8px;
+  border: 1px solid #101820; border-radius: 4px;
+}
+.admin_recording > .record_form > .search_box > div{
+  width: 45%; 
+}
+.admin_recording > .record_form > .selected_members{
+  display: flex; justify-content: space-between;
+  width: 100%; margin-bottom: 8px; padding: 8px;
+  border: 1px solid #101820; border-radius: 4px;
+}
+.admin_recording > .record_form > .selected_members > div{
+  width: 50%;
+}
+.admin_recording > .record_form > .selected_members > div:first-child{
+  margin-right: 8px;
+}
+.admin_recording > .record_form > .buttons{
+  display: flex; justify-content: center;
+  width: 100%; margin-bottom: 8px;
+}
+.admin_recording > .record_form > .buttons > button{
+  max-width: 240px;
+}
+.admin_recording > .record_form > .buttons > button:first-child{
+  margin-right: 8px;
+}
+
+.admin_recording .members{
+  display: flex; flex-direction: column;
+  width: 100%; padding: 8px;
+  border: 1px solid #101820; border-radius: 4px;
+}
+.admin_recording .member{
+  position: relative;
+  height: 64px; margin-bottom: 8px;
+  background-color: #fff; box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.admin_recording .member:last-child{
+  margin-bottom: 0;
+}
+.admin_recording .member > img{
+  position: absolute; top: 50%; left: 4px; transform: translateY(-50%);
+  width: 56px; height: 56px;
+}
+.admin_recording .member > .info{
+  display: flex; flex-direction: column;
+  position: absolute; top: 50%; left: 72px; transform: translateY(-50%);
+}
+.admin_recording .member > .info > span:first-child{
+  margin-bottom: 6px;
+  font-size: 28px;
+}
+.admin_recording .member > .info > span:last-child{
+  font-size: 20px;
+}
+.admin_recording .member > i{
+  display: flex; justify-content: center; align-items: center;
+  position: absolute; top: 50%; right: 4px; transform: translateY(-50%);
+  width: 56px; height: 56px;
+  background-color: #2ecc71;
+  font-size: 40px; line-height: 40px;
+  cursor: pointer;
+}
+.admin_recording .member > i:hover{
+  background-color: #27ae60;
+}
+
+.admin_recording > .record_form > .selected_members .member{
+  height: 48px;
+}
+.admin_recording > .record_form > .selected_members .member > img{
+  width: 40px; height: 40px;
+}
+.admin_recording > .record_form > .selected_members .member > .info{
+  left: 52px;
+}
+.admin_recording > .record_form > .selected_members .member > .info > span:first-child{
+  margin-bottom: 2px;
+  font-size: 20px;
+}
+.admin_recording > .record_form > .selected_members .member > .info > span:last-child{
+  font-size: 12px;
+}
+.admin_recording > .record_form > .selected_members .member > i{
+  width: 40px; height: 40px;
+  font-size:  24px; line-height: 24px;
+}
 
 /* Members in Admin */
 /* Members in Admin */
@@ -152,13 +275,10 @@
   bottom: 0;
   background-color: #27ae60;
 }
-.admin_members .members_box > div > .member > ul > li:nth-child(1):hover{}
-
-
-
-.admin_members .awaitors_box{
+.admin_members .members_box > div > .member > ul > li:nth-child(1):hover{
 
 }
+
 .admin_members .awaitors_box > div{
   width: 100%; height: calc(100% - 60px); padding: 0 32px;
   overflow: auto;
