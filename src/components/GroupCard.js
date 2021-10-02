@@ -23,10 +23,9 @@ const GroupCard = ({ group, index }) => {
           winners: game.data().winners,
           losers: game.data().losers,
           ratingChange: game.data().ratingChange,
-          percentage: game.data().percentage,
-          date: game.data().date,
-          time: game.data().writeTime,
-          id: `${game.data().date}-${game.data().writeTime}`,
+          playedDate: game.data().playedDate,
+          writtenDate: game.data().writtenDate,
+          id: game.data().id,
         }
         gamesArr = gamesArr.concat(gameObj)
       })
