@@ -1,4 +1,11 @@
 export const initialState = {
+  isGroupLoading: false,
+  isGroupLoaded: false,
+  isMemberLoaded: false,
+  isGameLoaded: false,
+  isPostLoaded: false,
+  isGroupInfoLoaded: false,
+  isAwaitorLoaded: false,
   isImageUploading: false,      // 이미지 업로드
   isImageUploaded: false,
   imageUploadError: null,
@@ -15,6 +22,10 @@ export const initialState = {
     chats: [],
   },
 }
+
+export const LOAD_GROUP_INIT = 'LOAD_GROUP_INIT'
+export const LOAD_GROUP_REQUEST = 'LOAD_GROUP_REQUEST'
+export const LOAD_GROUP_SUCCESS = 'LOAD_GROUP_SUCCESS'
 
 export const UPLOAD_POST_IMAGE_REQUEST = 'UPLOAD_POST_IMAGE_REQUEST'
 export const UPLOAD_POST_IMAGE_SUCCESS = 'UPLOAD_POST_IMAGE_SUCCESS'
@@ -78,6 +89,29 @@ export const CHANGE_CONTENT = 'CHANGE_CONTENT'
 
 const reducer = (state = initialState, action) => {
   switch(action.type) {
+    case LOAD_GROUP_INIT:
+      return {
+        ...state,
+        isGroupLoading: false,
+        isGroupLoaded: false,
+        isMemberLoaded: false,
+        isGameLoaded: false,
+        isPostLoaded: false,
+        isGroupInfoLoaded: false,
+        isAwaitorLoaded: false,
+      }
+    case LOAD_GROUP_REQUEST:
+      return {
+        ...state,
+        isGroupLoading: true,
+        isGroupLoaded: false,
+      }
+    case LOAD_GROUP_SUCCESS:
+      return {
+        ...state,
+        isGroupLoading: false,
+        isGroupLoaded: true,
+      }
     case LOAD_GROUP_INFO:
       return {
         ...state,
@@ -87,7 +121,8 @@ const reducer = (state = initialState, action) => {
           groupIntroduce: action.data.groupIntroduce,
           groupName: action.data.groupName,
           numberOfMember: action.data.numberOfMember,
-        }
+        },
+        isGroupInfoLoaded: true,
       }
     case LOAD_GAMES:
       return {
@@ -95,7 +130,8 @@ const reducer = (state = initialState, action) => {
         currentGroup: {
           ...state.currentGroup,
           games: action.data,
-        }
+        },
+        isGameLoaded: true,
       }
     case LOAD_MEMBERS:
       return {
@@ -103,7 +139,8 @@ const reducer = (state = initialState, action) => {
         currentGroup: {
           ...state.currentGroup,
           members: action.data,
-        }
+        },
+        isMemberLoaded: true,
       }
     case LOAD_POSTS:
       return {
@@ -111,7 +148,8 @@ const reducer = (state = initialState, action) => {
         currentGroup: {
           ...state.currentGroup,
           posts: action.data,
-        }
+        },
+        isPostLoaded: true,
       }
     case LOAD_COMMENTS:
       return {
@@ -136,7 +174,8 @@ const reducer = (state = initialState, action) => {
         currentGroup: {
           ...state.currentGroup,
           awaitors: action.data,
-        }
+        },
+        isAwaitorLoaded: true,
       }
     case CHANGE_CONTENT:
       return {

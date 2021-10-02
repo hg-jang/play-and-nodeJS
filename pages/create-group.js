@@ -14,7 +14,7 @@ export const getDate = () => {
   month = month >= 10 ? month : `0${month}`
   date = date >= 10 ? date : `0${date}`
 
-  return Number(`${year}${month}${date}`)
+  return `${year}${month}${date}`
 }
 
 const create_group = () => {

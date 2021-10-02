@@ -1,181 +1,28 @@
 import React, { useCallback } from 'react'
-import { fbaseFirestore } from '../fbase'
-import { LOAD_POSTS, LOAD_GAMES, LOAD_MEMBERS, LOAD_GROUP_INFO, LOAD_AWAITORS } from '../../reducers/group'
-import Link from 'next/link'
+import { LOAD_GROUP_REQUEST } from '../../reducers/group'
 import { Icon } from 'semantic-ui-react'
-import styles from '../css/my-groups.module.css'
 import { useDispatch } from 'react-redux'
+import Link from 'next/link'
+import styles from '../css/my-groups.module.css'
 
 const GroupCard = ({ group, index }) => {
   const dispatch = useDispatch()
   
   const defaultSrc = 'https://react.semantic-ui.com/images/avatar/large/elliot.jpg'
 
-  const loadGames = () => {
-    let gamesArr = []
-    fbaseFirestore.collection(group.groupName).doc('group data').collection('games')
-    .get()
-    .then((games) => {
-      games.forEach((game) => {
-        const gameObj = {
-          winnerRatingAfter: game.data().winnerRatingAfter,
-          loserRatingAfter: game.data().loserRatingAfter,
-          winners: game.data().winners,
-          losers: game.data().losers,
-          ratingChange: game.data().ratingChange,
-          playedDate: game.data().playedDate,
-          writtenDate: game.data().writtenDate,
-          id: game.data().id,
-        }
-        gamesArr = gamesArr.concat(gameObj)
-      })
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-    .then(() => {
-      dispatch({
-        type: LOAD_GAMES,
-        data: gamesArr,
-      })
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-  }
-
-  const loadMembers = () => {
-    let membersArr = []
-
-    fbaseFirestore.collection(group.groupName).doc('group data').collection('members')
-    .get()
-    .then((members) => {
-      members.forEach((member) => {
-        const memberObj = {
-          displayName: member.data().displayName,
-          photoURL: member.data().photoURL,
-          uid: member.data().uid,
-          joinedDate: member.data().joinedDate,
-          rating: member.data().rating,
-          start_rating: member.data().start_rating,
-          allGames: member.data().allGames,
-          winnedGames: member.data().winnedGames,
-          losedGames: member.data().losedGames,
-          status: member.data().status,
-        }
-        membersArr = membersArr.concat(memberObj)
-      })
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-    .then(() => {
-      dispatch({
-        type: LOAD_MEMBERS,
-        data: membersArr,
-      })
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-  }
-
-  const loadPosts = async () => {
-    let postsArr = []
-    let postObj = {}
-
-    const querySnapshot = await fbaseFirestore.collection(group.groupName).doc('group data').collection('posts').orderBy('date', "desc").get()
-
-    if(querySnapshot.length === 0) { return postsArr }
-    querySnapshot.forEach((post) => {
-      postObj = {
-        ...postObj,
-        writerUID: post.data().writerUID,
-        writerPhotoURL: post.data().writerPhotoURL,
-        writerDisplayName: post.data().writerDisplayName,
-        content: post.data().content,
-        imagePaths: post.data().imagePaths,
-        date: post.data().date,
-        id: post.data().id,
-      }
-      postsArr = postsArr.concat(postObj)
-    })
-    
+  const onClickEnter = useCallback(() => {
     dispatch({
-      type: LOAD_POSTS,
-      data: postsArr
+      type: LOAD_GROUP_REQUEST,
     })
-  }
-
-  const loadGroupInfo = () => {
-    fbaseFirestore.collection(group.groupName).doc('group information')
-    .get()
-    .then((doc) => {
-      dispatch({
-        type: LOAD_GROUP_INFO,
-        data: {
-          createdDate: doc.data().createdDate,
-          groupIntroduce: doc.data().groupIntroduce,
-          groupName: doc.data().groupName,
-          numberOfMember: doc.data().numberOfMember,
-        }
-      })
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-  }
-
-  const loadAwaitors = () => {
-    let awaitorsArr = []
-
-    fbaseFirestore.collection(group.groupName).doc('group data').collection('awaitors')
-    .get()
-    .then((awaitors) => {
-      awaitors.forEach((awaitor) => {
-        const awaitorObj = {
-          displayName: awaitor.data().displayName,
-          photoURL: awaitor.data().photoURL,
-          uid: awaitor.data().uid,
-        }
-        awaitorsArr = awaitorsArr.concat(awaitorObj)
-      })
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-    .then(() => {
-      dispatch({
-        type: LOAD_AWAITORS,
-        data: awaitorsArr,
-      })
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-  }
-
-  // 일반 사용자 페이지 접속 시 먼저 불러올 데이터들
-  const onClickSetGroup = useCallback(() => {
-    loadGames()
-    loadMembers()
-    loadPosts()
-  }, [group])
-
-  // 관리자 페이지 접속 시 먼저 불러올 데이터들
-  const onClickSetAdmin = useCallback(() => {
-    loadGroupInfo()
-    loadMembers()
-    loadAwaitors()
   }, [group])
 
   return (
     <div className={styles.group_card} key={index}>
       <div className={styles.group_image}>
         <img src={defaultSrc} alt="team profile" />
-        {group.isAdmin === true ? <div className={styles.admin_button} onClick={onClickSetAdmin}><Link href={`/admin/${group.groupName}`}><a><Icon fitted name='setting' size='large' /></a></Link></div> : <></>}
+        {group.isAdmin === true ? <div className={styles.admin_button} onClick={onClickEnter}><Link href={`/admin/${group.groupName}`}><a><Icon fitted name='setting' size='large' /></a></Link></div> : <></>}
       </div>
-      <h1 className={styles.team_name} onClick={onClickSetGroup}><Link href={`/group/${group.groupName}`}><a>{group.groupName}</a></Link></h1>
+      <h1 className={styles.team_name} onClick={onClickEnter}><Link href={`/group/${group.groupName}`}><a>{group.groupName}</a></Link></h1>
       <h2 className={styles.group_introduce}>{group.groupIntroduce}</h2>
       <ul className={styles.group_info}>
         <li className={styles.created_date}>

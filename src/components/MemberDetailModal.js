@@ -9,7 +9,7 @@ import MemberDetailWinningRate from './MemberDetailWinningRate';
 import MemberDetailRankingRate from './MemberDetailRankingRate';
 import GameRecordForm from './GameRecordForm';
 
-const MemberDetailModal = ({ isModalOpen, setIsModalOpen, detailedMember, setDetailedMember }) => {
+const MemberDetailModal = ({ isModalOpen, setIsModalOpen, detailedMember }) => {
   const router = useRouter()
   const { group } = router.query
 
@@ -28,7 +28,7 @@ const MemberDetailModal = ({ isModalOpen, setIsModalOpen, detailedMember, setDet
 
   useEffect(() => {
     console.log('detailedMembber :', detailedMember)
-  })
+  }, [])
 
   const info = (
     <>
@@ -115,7 +115,7 @@ const MemberDetailModal = ({ isModalOpen, setIsModalOpen, detailedMember, setDet
             </div>
             <div className={styles.bot}>
               <div className={styles.bot__left}>
-                <MemberDetailChart chartType={chartType} period={period} detailedMember={detailedMember} games={games} />
+                <MemberDetailChart chartType={chartType} period={period} member={detailedMember} games={games} />
               </div>
               <div className={styles.bot__right}>
                 <GameRecordForm games={games} />

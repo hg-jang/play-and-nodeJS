@@ -5,6 +5,7 @@ import styles from '../css/group.module.css'
 
 const MemberCard = ({ member, index, setIsModalOpen, setDetailedMember }) => {
   const members = useSelector((state) => state.group.currentGroup?.members)
+  
   const onClickOpenDetail = (e) => {
     setDetailedMember(members.find(member => member.uid === e.target.dataset.uid))
     setIsModalOpen(true)

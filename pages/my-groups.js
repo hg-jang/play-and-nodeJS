@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { fbaseFirestore } from '../src/fbase'
 import { Button } from 'semantic-ui-react'
+import { LOAD_GROUP_INIT } from '../reducers/group'
 import Link from 'next/link'
-import styles from '../src/css/my-groups.module.css'
 import GroupCard from '../src/components/GroupCard'
+import styles from '../src/css/my-groups.module.css'
 
 const my_groups = () => {
-  const uid = useSelector((state) => state.auth.currentUser?.uid)
   const [groupList, setGroupList] = useState([])
+
+  const dispatch = useDispatch()
+  const uid = useSelector((state) => state.auth.currentUser?.uid)
+  
 
   const getGroupList = async () => {
     try {
@@ -57,6 +61,12 @@ const my_groups = () => {
   useEffect(() => {
     getGroupList()
   }, [])
+  useEffect(() => {
+    dispatch({
+      type: LOAD_GROUP_INIT,
+    })
+  })
+
 
   return (
     <div className={styles.my_groups}>
