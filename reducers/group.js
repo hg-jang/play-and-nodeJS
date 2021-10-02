@@ -43,6 +43,7 @@ export const REMOVE_EDITING_IMAGE_FAILURE = 'REMOVE_EDITING_IMAGE_FAILURE'
 export const REMOVE_AWAITOR = 'REMOVE_AWAITOR'
 
 export const ADD_MEMBER = 'ADD_MEMBER'
+export const EDIT_MEMBER = 'EDIT_MEMBER'
 export const REMOVE_MEMBER = 'REMOVE_MEMBER'
 
 export const LOAD_GROUP_INFO = 'LOAD_GROUP_INFO'
@@ -453,6 +454,35 @@ const reducer = (state = initialState, action) => {
         currentGroup: {
           ...state.currentGroup,
           members: [...state.currentGroup.members, action.data],
+        }
+      }
+    case EDIT_MEMBER:
+      return {
+        ...state,
+        currentGroup: {
+          ...state.currentGroup,
+          members: state.currentGroup.members.map((member) => {
+            if(member.uid !== action.data.uid) {
+              return member
+            } else {
+              if(action.data.game === 1) {
+                return {
+                  ...member,
+                  rating: action.data.rating,
+                  allGames: member.allGames + 1,
+                  winnedGames: member.winnedGames + 1,
+                }
+              } else {
+                return {
+                  ...member,
+                  rating: action.data.rating,
+                  allGames: member.allGames + 1,
+                  losedGames: member.losedGames + 1,
+                }
+              }
+              
+            }
+          })
         }
       }
     case REMOVE_MEMBER:

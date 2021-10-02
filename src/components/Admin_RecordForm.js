@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { fbaseFirestore } from '../fbase'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button, Input, Icon } from 'semantic-ui-react'
 import useInput from '../../hooks/useInput'
 import { getDateWithTime } from './PostForm'
 import Admin_RecordForm_Member from './Admin_RecordForm_Member'
 import Admin_RecordForm_Selected from './Admin_RecordForm_Selected'
 import styles from '../css/admin_group.module.css'
+import { EDIT_MEMBER } from '../../reducers/group'
 
 
 const getPercentage = (winnersAverage, losersAverage) => {
@@ -21,6 +22,7 @@ const Admin_RecordForm = () => {
   const router = useRouter()
   const { group } = router.query
 
+  const dispatch = useDispatch()
   const members = useSelector((state) => state.group.currentGroup.members)
 
   const [year, setYear] = useState('2021')
@@ -71,15 +73,58 @@ const Admin_RecordForm = () => {
       fbaseFirestore.collection(group).doc('group data').collection('games').doc(docId)
       .set(gameObj)
       .then(() => { // winners[0] 문서에 경기 기록 추가
-        fbaseFirestore.collection('whole users').doc(winners[0].uid).collection('joining groups').doc(group).collection('games').doc(docId)
+        fbaseFirestore.collection(group).doc('group data').collection('members').doc(winners[0].uid).collection('games').doc(docId)
         .set(gameObj)
       })
       .catch((error) => {console.log(error);})
+      .then(() => { // winners[0]의 문서에서 수치 수정
+        fbaseFirestore.collection(group).doc('group data').collection('members').doc(winners[0].uid)
+        .set({
+          rating: winners[0].rating + ratingChange,
+          allGames: winners[0].allGames + 1,
+          winnedGames: winners[0].winnedGames + 1,
+        }, { merge: true })
+      })
+      .catch((error) => {
+        console.log(error);
+      })
       .then(() => { // losers[0] 문서에 경기 기록 추가
-        fbaseFirestore.collection('whole users').doc(losers[0].uid).collection('joining groups').doc(group).collection('games').doc(docId)
+        fbaseFirestore.collection(group).doc('group data').collection('members').doc(losers[0].uid).collection('games').doc(docId)
         .set(gameObj)
       })
       .catch((error) => {console.log(error);})
+      .then(() => { // losers[0]의 문서에서 수치 수정
+        fbaseFirestore.collection(group).doc('group data').collection('members').doc(losers[0].uid)
+        .set({
+          rating: losers[0].rating + ratingChange,
+          allGames: losers[0].allGames + 1,
+          losedGames: losers[0].losedGames - 1,
+        }, { merge: true })
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .then(() => {
+        dispatch({
+          type: EDIT_MEMBER,
+          data: {
+            uid: winners[0].uid,
+            rating: winners[0].rating + ratingChange,
+            game: + 1,
+          },
+        })
+        dispatch({
+          type: EDIT_MEMBER,
+          data: {
+            uid: losers[0].uid,
+            rating: losers[0].rating - ratingChange,
+            game: - 1,
+          },
+        })
+      })
+      .catch((error) => {
+        console.log(error);
+      })
       .then(() => { // 초기화
         setWinners([])
         setLosers([])
@@ -122,25 +167,104 @@ const Admin_RecordForm = () => {
       fbaseFirestore.collection(group).doc('group data').collection('games').doc(docId)
       .set(gameObj)
       .then(() => { // winners[0] 문서에 경기 기록 추가
-        fbaseFirestore.collection('whole users').doc(winners[0].uid).collection('joining groups').doc(group).collection('games').doc(docId)
+        fbaseFirestore.collection(group).doc('group data').collection('members').doc(winners[0].uid).collection('games').doc(docId)
         .set(gameObj)
+      })
+      .then(() => { // winners[0]의 문서에서 수치 수정
+        fbaseFirestore.collection(group).doc('group data').collection('members').doc(winners[0].uid)
+        .set({
+          rating: winners[0].rating + ratingChange,
+          allGames: winners[0].allGames + 1,
+          winnedGames: winners[0].winnedGames + 1,
+        }, { merge: true })
+      })
+      .catch((error) => {
+        console.log(error);
       })
       .catch((error) => {console.log(error);})
       .then(() => { // winners[1] 문서에 경기 기록 추가
-        fbaseFirestore.collection('whole users').doc(winners[1].uid).collection('joining groups').doc(group).collection('games').doc(docId)
+        fbaseFirestore.collection(group).doc('group data').collection('members').doc(winners[1].uid).collection('games').doc(docId)
         .set(gameObj)
       })
       .catch((error) => {console.log(error);})
+      .then(() => { // winners[1]의 문서에서 수치 수정
+        fbaseFirestore.collection(group).doc('group data').collection('members').doc(winners[1].uid)
+        .set({
+          rating: winners[1].rating + ratingChange,
+          allGames: winners[1].allGames + 1,
+          winnedGames: winners[1].winnedGames + 1,
+        }, { merge: true })
+      })
+      .catch((error) => {
+        console.log(error);
+      })
       .then(() => { // loser[0] 문서에 경기 기록 추가
-        fbaseFirestore.collection('whole users').doc(losers[0].uid).collection('joining groups').doc(group).collection('games').doc(docId)
+        fbaseFirestore.collection(group).doc('group data').collection('members').doc(losers[0].uid).collection('games').doc(docId)
         .set(gameObj)
       })
       .catch((error) => {console.log(error);})
+      .then(() => { // losers[0]의 문서에서 수치 수정
+        fbaseFirestore.collection(group).doc('group data').collection('members').doc(losers[0].uid)
+        .set({
+          rating: losers[0].rating + ratingChange,
+          allGames: losers[0].allGames + 1,
+          losedGames: losers[0].losedGames + 1,
+        }, { merge: true })
+      })
+      .catch((error) => {console.log(error)})
       .then(() => { // losers[1] 문서에 경기 기록 추가
-        fbaseFirestore.collection('whole users').doc(losers[1].uid).collection('joining groups').doc(group).collection('games').doc(docId)
+        fbaseFirestore.collection(group).doc('group data').collection('members').doc(losers[1].uid).collection('games').doc(docId)
         .set(gameObj)
       })
       .catch((error) => {console.log(error);})
+      .then(() => { // losers[1]의 문서에서 수치 수정
+        fbaseFirestore.collection(group).doc('group data').collection('members').doc(losers[1].uid)
+        .set({
+          rating: losers[1].rating + ratingChange,
+          allGames: losers[1].allGames + 1,
+          losedGames: losers[1].losedGames + 1,
+        }, { merge: true })
+      })
+      .catch((error) => {console.log(error)})
+      .then(() => {
+        dispatch({
+          type: EDIT_MEMBER,
+          data: {
+            uid: winners[0].uid,
+            rating: winners[0].rating + ratingChange,
+            game: + 1,
+          },
+        })
+        dispatch({
+          type: EDIT_MEMBER,
+          data: {
+            uid: losers[0].uid,
+            rating: losers[0].rating - ratingChange,
+            game: - 1,
+          },
+        })
+        dispatch({
+          type: EDIT_MEMBER,
+          data: {
+            uid: winners[1].uid,
+            rating: winners[1].rating + ratingChange,
+            game: + 1,
+          },
+        })
+        dispatch({
+          type: EDIT_MEMBER,
+          data: {
+            uid: losers[1].uid,
+            rating: losers[1].rating - ratingChange,
+            game: - 1,
+          },
+        })
+      })
+      .catch((error) => console.log(error))
+      .then(() => {
+        setWinners([])
+        setLosers([])
+      })
     }
   }, [winners, losers])
 
