@@ -22,6 +22,7 @@ const Nav = () => {
         <li data-content="community" onClick={onClickList}>커뮤니티</li>
         <li data-content="ranking" onClick={onClickList}>멤버 랭킹</li>
         <li data-content="member list" onClick={onClickList}>멤버 리스트</li>
+        <li data-content="game records" onClick={onClickList}>경기 기록</li>
         <li><Link href="/my-groups"><a>선택 화면으로</a></Link></li>
       </ul>
       <footer>

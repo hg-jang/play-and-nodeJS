@@ -8,9 +8,6 @@ const AdminRecording = () => {
       <div className={styles.record_form}>
           <Admin_RecordForm />
       </div>
-      <div className={styles.records}>
-          {/* <Admin_Records /> */}
-      </div>
     </div>
   )
 }

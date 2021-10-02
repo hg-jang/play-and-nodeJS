@@ -23,7 +23,7 @@ const Admin_RecordForm = () => {
 
   const members = useSelector((state) => state.group.currentGroup.members)
 
-  const [year, setYear] = useState(2021)
+  const [year, setYear] = useState('2021')
   const [month, setMonth] = useState('01')
   const [date, setDate] = useState('01')
   const onClickYear = (e) => {
@@ -116,6 +116,7 @@ const Admin_RecordForm = () => {
         loserRatingBefore: [losers[0].rating],
         winnerRatingAfter: [winners[0].rating + ratingChange , winners[1].rating + ratingChange],
         loserRatingAfter: [losers[0].rating - ratingChange, losers[1].rating - ratingChange],
+        id: docId,
       }
 
       fbaseFirestore.collection(group).doc('group data').collection('games').doc(docId)
@@ -168,6 +169,7 @@ const Admin_RecordForm = () => {
           </div>
           <ul className="dropdown__list">
             <li className="dropdown__list__item" data-year="2020" onClick={onClickYear}>2020</li>
+            <li className="dropdown__list__item" data-year="2021" onClick={onClickYear}>2021</li>
             <li className="dropdown__list__item" data-year="2021" onClick={onClickYear}>2021</li>
           </ul>
         </div>

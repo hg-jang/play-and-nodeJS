@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import MemberDetailChart from './MemberDetailChart';
 import MemberDetailWinningRate from './MemberDetailWinningRate';
 import MemberDetailRankingRate from './MemberDetailRankingRate';
-import GameRecords from './GameRecords';
+import GameRecordForm from './GameRecordForm';
 
 const MemberDetailModal = ({ isModalOpen, setIsModalOpen, detailedMember, setDetailedMember }) => {
   const router = useRouter()
@@ -118,7 +118,7 @@ const MemberDetailModal = ({ isModalOpen, setIsModalOpen, detailedMember, setDet
                 <MemberDetailChart chartType={chartType} period={period} detailedMember={detailedMember} games={games} />
               </div>
               <div className={styles.bot__right}>
-                <GameRecords games={games} />
+                <GameRecordForm games={games} />
               </div>
             </div>
           </div>
