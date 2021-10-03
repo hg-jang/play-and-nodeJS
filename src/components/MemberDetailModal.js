@@ -68,19 +68,22 @@ const MemberDetailModal = ({ isModalOpen, setIsModalOpen, detailedMember, setDet
   )
 
   const getGames = () => {
-    fbaseFirestore.collection(group).doc('group data').collection('members').doc(detailedMember.uid).collection('personal records').get()
-    .then((members) => {
-      if(members.docs.length === 0) {
+    fbaseFirestore.collection(group).doc('group data').collection('members').doc(detailedMember.uid).collection('games')
+    .get()
+    .then((games) => {
+      if(games.docs.length === 0) {
+        console.log('게임 기록 없음');
         setGames([])
       } else {
-        members.forEach((member) => {
+        console.log('게임 기록 있음');
+        games.forEach((game) => {
           const gameObj = {
-            date: member.data().date,
-            winnerRatingAfter: member.data().winnerRatingAfter,
-            winners: member.data().winners,
-            loserRatingAfter: member.data().loserRatingAfter,
-            losers: member.data().losers,
-            ratingChange: member.data().ratingChange,
+            playedDate: game.data().playedDate,
+            winnerRatingAfter: game.data().winnerRatingAfter,
+            winners: game.data().winners,
+            loserRatingAfter: game.data().loserRatingAfter,
+            losers: game.data().losers,
+            ratingChange: game.data().ratingChange,
           }
           setGames(games => [...games, gameObj])
         })
@@ -89,8 +92,11 @@ const MemberDetailModal = ({ isModalOpen, setIsModalOpen, detailedMember, setDet
   }
   
   useEffect(() => {
-    getGames()    
+    getGames()
   }, [detailedMember])
+  useEffect(() => {
+    console.log('games in Modal :', games);
+  }, [games])
 
   return (
     <Modal onClose={() => setIsModalOpen(false)} open={isModalOpen} size='large'>

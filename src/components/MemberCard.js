@@ -3,12 +3,11 @@ import { useSelector } from 'react-redux'
 import { Button } from 'semantic-ui-react'
 import styles from '../css/group.module.css'
 
-const MemberCard = ({ member, index, setIsModalOpen, setDetailedMember }) => {
+const MemberCard = ({ member, index, setDetailedMember }) => {
   const members = useSelector((state) => state.group.currentGroup?.members)
-  
+
   const onClickOpenDetail = (e) => {
     setDetailedMember(members.find(member => member.uid === e.target.dataset.uid))
-    setIsModalOpen(true)
   }
 
   return (

@@ -14,6 +14,13 @@ const MemberList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [detailedMember, setDetailedMember] = useState({}) // 상세 정보 보여 줄 타겟 정보
 
+  const isEmpty = (obj) => {
+    for(var key in obj) {
+      if(obj.hasOwnProperty(key))
+        return false
+    }
+    return true
+  }
   useEffect(() => {
     if(name) {
       setMemberList(members.filter(el => el.displayName.includes(name)))
@@ -21,6 +28,18 @@ const MemberList = () => {
       setMemberList(members)
     }
   }, [name])
+
+  useEffect(() => {
+    if(isEmpty(detailedMember)) {
+      setIsModalOpen(false)
+    } else {
+      console.log('리스트 :', detailedMember);
+      setIsModalOpen(true)
+    }
+  }, [detailedMember])
+  useEffect(() => {
+    console.log('리스트 :', isModalOpen);
+  }, [isModalOpen])
 
   return (
     <>
@@ -37,7 +56,7 @@ const MemberList = () => {
           :
           <div className={styles.no_members}>멤버가 존재하지 않습니다.</div>
         }
-        <MemberDetailModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} detailedMember={detailedMember} />
+        <MemberDetailModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} detailedMember={detailedMember} setDetailedMember={setDetailedMember} />
       </div>
     </>
   )

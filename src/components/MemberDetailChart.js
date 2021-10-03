@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Line } from 'react-chartjs-2'
+import { Loader } from 'semantic-ui-react'
 
 const MemberDetailChart = ({ chartType, period, games, detailedMember }) => {
   // userMatch에서 rating 가져오기
   const getRating = (date) => {
-    const game = games.find(el => el.date - date <= 0) ? games.find(el => el.date - date <= 0) : detailedMember.startRating
+    const game = games.find(el => el.playedDate - date <= 0) ? games.find(el => el.playedDate - date <= 0) : detailedMember.startRating
 
-    if(typeof game === 'number' || typeof game === 'string') {
-      return Number(game)
+    if(typeof game === 'number') {
+      return game
     } else if(game.winners.includes(detailedMember.displayName)) {
       return game.winnerRatingAfter[game.winners.indexOf(detailedMember.displayName)]
     } else if(game.losers.includes(detailedMember.displayName)) {
@@ -108,6 +109,9 @@ const MemberDetailChart = ({ chartType, period, games, detailedMember }) => {
   }
 
   return (
+    <>
+    {games.length === 0 && <Loader>Loading</Loader>}
+    {games.length !== 0 &&
     <Line
       data={{
         labels: dataLabels(),
@@ -120,7 +124,8 @@ const MemberDetailChart = ({ chartType, period, games, detailedMember }) => {
         }]
       }}
       options={{ maintainAspectRatio: false }}
-    />
+    />}
+    </>
   )
 }
 

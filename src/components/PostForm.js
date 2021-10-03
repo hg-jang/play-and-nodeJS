@@ -12,7 +12,7 @@ export const getDateWithTime = () => {
   const today = new Date()
 
   const year = today.getFullYear()
-  let month = today.getMonth() 
+  let month = today.getMonth() + 1
   let date = today.getDate()
 
   let hour = today.getHours()
