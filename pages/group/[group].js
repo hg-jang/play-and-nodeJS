@@ -32,7 +32,7 @@ const group_index = () => {
           uid: member.data().uid,
           joinedDate: member.data().joinedDate,
           rating: member.data().rating,
-          start_rating: member.data().start_rating,
+          startRating: member.data().startRating,
           allGames: member.data().allGames,
           winnedGames: member.data().winnedGames,
           losedGames: member.data().losedGames,

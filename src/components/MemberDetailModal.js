@@ -9,7 +9,7 @@ import MemberDetailWinningRate from './MemberDetailWinningRate';
 import MemberDetailRankingRate from './MemberDetailRankingRate';
 import GameRecordForm from './GameRecordForm';
 
-const MemberDetailModal = ({ isModalOpen, setIsModalOpen, detailedMember }) => {
+const MemberDetailModal = ({ isModalOpen, setIsModalOpen, detailedMember, setDetailedMember }) => {
   const router = useRouter()
   const { group } = router.query
 
@@ -115,7 +115,7 @@ const MemberDetailModal = ({ isModalOpen, setIsModalOpen, detailedMember }) => {
             </div>
             <div className={styles.bot}>
               <div className={styles.bot__left}>
-                <MemberDetailChart chartType={chartType} period={period} member={detailedMember} games={games} />
+                <MemberDetailChart chartType={chartType} period={period} detailedMember={detailedMember} games={games} />
               </div>
               <div className={styles.bot__right}>
                 <GameRecordForm games={games} />
@@ -129,7 +129,7 @@ const MemberDetailModal = ({ isModalOpen, setIsModalOpen, detailedMember }) => {
           content="확인"
           labelPosition='right'
           icon='checkmark'
-          onClick={() => {setIsModalOpen(false)}}
+          onClick={() => {setDetailedMember({});}}
           positive
         />
       </Modal.Actions>
