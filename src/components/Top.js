@@ -9,7 +9,6 @@ import classNames from 'classnames'
 const Top = () => {
   const dispatch = useDispatch()
   const { isLoggedIn, currentUser } = useSelector((state) => state.auth)
-  // const [isModalOpen, setIsModalOpen] = useState(false)
 
   const defaultPhotoURL = '/img/default_profile.jpg'
   
@@ -27,9 +26,14 @@ const Top = () => {
           {
           isLoggedIn ?
           <ul className={styles.header__loggedIn}>
-            <li><img src={currentUser.photoURL ? currentUser.photoURL : defaultPhotoURL} alt="user profile" /></li>
-            <li className={styles.name}>{currentUser.displayName ? currentUser.displayName : '익명의 사용자'}님</li>
-            <li><Link href="/profile/"><a><Icon name="setting" size="large" className={styles.icon__setting} /></a></Link></li>
+            <li>
+              <img src={currentUser.photoURL ? currentUser.photoURL : defaultPhotoURL} alt="user profile" />
+              <Icon name="edit" />
+            </li>
+            <li className={styles.name}>
+              <span>{currentUser.displayName ? currentUser.displayName : '익명의 사용자'}님</span>
+              <Icon name="edit" />
+            </li>
             <li><Button primary onClick={onClickLogOut}>Log Out</Button></li>
           </ul>
           :
@@ -40,7 +44,6 @@ const Top = () => {
           }
         </div>
       </div>
-      {/* <UserInfoModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} /> */}
     </>
   )
 }

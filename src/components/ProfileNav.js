@@ -7,7 +7,7 @@ const ProfileNav = () => {
     <div className={styles.profile_nav}>
       <ul>
         <li><Link href="/profile/"><a>profile</a></Link></li>
-        <li><Link href="/profile/redocrds"><a>기록</a></Link></li>
+        <li><Link href="/profile/records"><a>기록</a></Link></li>
         <li>노력의 흔적...</li>
       </ul>
       <footer>

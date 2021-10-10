@@ -1,22 +1,23 @@
 import React, { useRef, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import styles from '../../src/css/profile.module.css'
 import { PROFILE_SAVE_REQUEST, UPLOAD_IMAGE_REQUEST } from '../../reducers/auth'
+import { Button } from 'semantic-ui-react'
 import UserProfileCard from '../../src/components/UserProfileCard'
 import useInput from '../../hooks/useInput'
+import styles from '../../src/css/profile.module.css'
 
 const profile = () => {
   const [text, onChangeText, setText] = useInput('')
   const imageInputRef = useRef()
 
   const dispatch = useDispatch()
-  const { currentUser, imageSrc, isProfileSavingDone, imageUploadError, profileSaveError, } = useSelector((state) => state.auth)
+  const { currentUser, imageSrc, isProfileSavingDone } = useSelector((state) => state.auth)
 
   const onClickImageInput = useCallback(() => {
     imageInputRef.current.click()
   }, [])
 
-  const onChangeImageInput = useCallback((e) => {
+  const onChangeImageInput = (e) => {
     const file = e.target.files[0]
     const src = file.name
 
@@ -27,10 +28,9 @@ const profile = () => {
         file: file,
       },
     })
-  }, [])
+  }
 
   const onClickSave = useCallback(() => {
-    console.log(text, imageSrc);
     dispatch({
       type: PROFILE_SAVE_REQUEST,
       data: {
@@ -43,15 +43,6 @@ const profile = () => {
   useEffect(() => {
     console.log(imageSrc)
   }, [imageSrc])
-
-  useEffect(() => {
-    if(imageUploadError) {
-      alert(imageUploadError)
-    }
-    if(profileSaveError) {
-      alert(profileSaveError)
-    }
-  }, [imageUploadError, profileSaveError])
 
   useEffect(() => {
     if(isProfileSavingDone) {
@@ -74,7 +65,7 @@ const profile = () => {
           <input type="file" hidden ref={imageInputRef} onChange={onChangeImageInput} />
           <span className={styles.edit_img_button} onClick={onClickImageInput}>프로필 사진 변경</span>
         </div>
-        <span className="button__index" onClick={onClickSave}>변경 내용 저장</span>
+        <Button onClick={onClickSave}>변경 내용 저장</Button>
       </div>
     </div>
   )
