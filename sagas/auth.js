@@ -5,9 +5,10 @@ import {
   SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE,
   LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE,
   LOG_OUT_REQUEST, LOG_OUT_SUCCESS, LOG_OUT_FAILURE,
-  UPLOAD_IMAGE_REQUEST, UPLOAD_IMAGE_SUCCESS, UPLOAD_IMAGE_FAILURE,
-  DOWNLOAD_IMAGE_URL_REQUEST, DOWNLOAD_IMAGE_URL_SUCCESS, DOWNLOAD_IMAGE_URL_FAILURE,
-  PROFILE_SAVE_REQUEST, PROFILE_SAVE_SUCCESS, PROFILE_SAVE_FAILURE,
+  UPLOAD_PROFILE_IMAGE_REQUEST, UPLOAD_PROFILE_IMAGE_SUCCESS, UPLOAD_PROFILE_IMAGE_FAILURE,
+  DOWNLOAD_PROFILE_IMAGE_URL_REQUEST, DOWNLOAD_PROFILE_IMAGE_URL_SUCCESS, DOWNLOAD_PROFILE_IMAGE_URL_FAILURE,
+  EDIT_NAME_REQUEST, EDIT_NAME_SUCCESS, EDIT_NAME_FAILURE,
+  EDIT_PROFILE_IMAGE_REQUEST, EDIT_PROFILE_IMAGE_SUCCESS, EDIT_PROFILE_IMAGE_FAILURE,
 } from '../reducers/auth'
 
 function* logIn(action) {
@@ -18,14 +19,11 @@ function* logIn(action) {
       action.data.email,
       action.data.password,
     )
-    console.log(result)
     yield put({
       type: LOG_IN_SUCCESS,
       user: result.user
     })
   } catch(error) {
-    console.log('error', error);
-    console.log('error.data', error.data);
     yield put({
       type: LOG_IN_FAILURE,
       error: error.message,
@@ -69,7 +67,7 @@ function* signUp(action) {
   }
 }
 
-function* uploadImage(action) {
+function* uploadProfileImage(action) {
   try {
     const storageRef = fbaseStorage.ref()
 
@@ -88,21 +86,21 @@ function* uploadImage(action) {
     )
     
     yield put({
-      type: UPLOAD_IMAGE_SUCCESS,
+      type: UPLOAD_PROFILE_IMAGE_SUCCESS,
     })
     yield put({
-      type: DOWNLOAD_IMAGE_URL_REQUEST,
+      type: DOWNLOAD_PROFILE_IMAGE_URL_REQUEST,
       data: imageRef,
     })
   } catch(error) {
     yield put({
-      type: UPLOAD_IMAGE_FAILURE,
+      type: UPLOAD_PROFILE_IMAGE_FAILURE,
       error: error.message,
     })
   }
 }
 
-function* downloadImageURL(action) {
+function* downloadProfileImageURL(action) {
   try {
     const storageRef = fbaseStorage.ref()
     const childRef = yield call(
@@ -113,39 +111,62 @@ function* downloadImageURL(action) {
       [childRef, childRef.getDownloadURL],
     )
     yield put({
-      type: DOWNLOAD_IMAGE_URL_SUCCESS,
+      type: DOWNLOAD_PROFILE_IMAGE_URL_SUCCESS,
+      data: result,
+    })
+    yield put({
+      type: EDIT_PROFILE_IMAGE_REQUEST,
       data: result,
     })
   } catch(error) {
     yield put({
-      type: DOWNLOAD_IMAGE_URL_FAILURE,
+      type: DOWNLOAD_PROFILE_IMAGE_URL_FAILURE,
       error: error.message,
     })
   }
 }
 
-function* profileSave(action) {
+function* editName(action) {
+  try {
+    const user = fbaseAuth.currentUser
+
+    yield call(
+      [user, user.updateProfile],
+      {
+        displayName: action.data,
+      },
+    )
+
+    yield put({
+      type: EDIT_NAME_SUCCESS,
+      data: action.data,
+    })
+  } catch(error) {
+    yield put({
+      type: EDIT_NAME_FAILURE,
+      error: error.message,
+    })
+  }
+}
+
+function* editProfileImage(action) {
   try {
     const user = fbaseAuth.currentUser
     
     yield call(
       [user, user.updateProfile],
       {
-        displayName: action.data.displayName !== '' ? action.data.displayName : user.displayName,
-        photoURL: action.data.photoURL !== '' ? action.data.photoURL : user.photoURL,
+        photoURL: action.data !== '' ? action.data : user.photoURL,
       },
     )
     
     yield put({
-      type: PROFILE_SAVE_SUCCESS,
-      data: {
-        displayName: action.data.displayName !== '' ? action.data.displayName : user.displayName,
-        photoURL: action.data.photoURL !== '' ? action.data.photoURL : user.photoURL,
-      }
+      type: EDIT_PROFILE_IMAGE_SUCCESS,
+      data: action.data !== '' ? action.data : user.photoURL,
     })
   } catch(error) {
     yield put({
-      type: PROFILE_SAVE_FAILURE,
+      type: EDIT_PROFILE_IMAGE_FAILURE,
       error: error.message,
     })
   }
@@ -160,14 +181,17 @@ function* watchLogOut() {
 function* watchSignUp() {
   yield takeLatest(SIGN_UP_REQUEST, signUp)
 }
-function* watchUploadImage() {
-  yield takeLatest(UPLOAD_IMAGE_REQUEST, uploadImage)
+function* watchUploadProfileImage() {
+  yield takeLatest(UPLOAD_PROFILE_IMAGE_REQUEST, uploadProfileImage)
 }
-function* watchDownloadImageURL() {
-  yield takeLatest(DOWNLOAD_IMAGE_URL_REQUEST, downloadImageURL)
+function* watchDownloadProfileImageURL() {
+  yield takeLatest(DOWNLOAD_PROFILE_IMAGE_URL_REQUEST, downloadProfileImageURL)
 }
-function* watchProfileSave() {
-  yield takeLatest(PROFILE_SAVE_REQUEST, profileSave)
+function* watchEditName() {
+  yield takeLatest(EDIT_NAME_REQUEST, editName)
+}
+function* watchEditProfileImage() {
+  yield takeLatest(EDIT_PROFILE_IMAGE_REQUEST, editProfileImage)
 }
 
 export default function* authSaga() {
@@ -175,8 +199,9 @@ export default function* authSaga() {
     fork(watchLogIn),
     fork(watchLogOut),
     fork(watchSignUp),
-    fork(watchUploadImage),
-    fork(watchDownloadImageURL),
-    fork(watchProfileSave),
+    fork(watchUploadProfileImage),
+    fork(watchDownloadProfileImageURL),
+    fork(watchEditName),
+    fork(watchEditProfileImage),
   ])
 }

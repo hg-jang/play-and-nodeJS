@@ -12,16 +12,19 @@ export const initialState = {
   logOutError: null,
   currentUser: null,    // 현재 사용자
 
-  isImageUploading: false,    // 이미지 업로드
-  isImageUploaded: false,
-  imageUploadError: null,
-  isImageURLDownloading: false,    // 이미지 경로 다운로드
-  isImageURLDownloaded: false,
-  imageURLDownloadError: null,
-  isProfileSaving: false,         // 프로필 저장
-  isProfileSaved: false,
-  profileSaveError: null,
-  imageSrc: '',
+  isProfileImageUploading: false,    // 프로필 이미지 업로드
+  isProfileImageUploaded: false,
+  profileImageUploadError: null,
+  isProfileImageURLDownloading: false,    // 프로필 이미지 경로 다운로드
+  isProfileImageURLDownloaded: false,
+  profileImageURLDownloadError: null,
+  isNameEditing: false,             // 프로필 이름 변경
+  isNameEdited: false,
+  nameEditError: null,
+  isProfileImageEditing: false,     // 프로필 이미지 변경
+  isProfileImageEdited: false,
+  profileImageEditError: null,
+  profileImageURL: '',
 }
 
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST'
@@ -36,17 +39,21 @@ export const LOG_OUT_REQUEST = 'LOG_OUT_REQUEST'
 export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS'
 export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE'
 
-export const UPLOAD_IMAGE_REQUEST = 'UPLOAD_IMAGE_REQUEST'
-export const UPLOAD_IMAGE_SUCCESS = 'UPLOAD_IMAGE_SUCCESS'
-export const UPLOAD_IMAGE_FAILURE = 'UPLOAD_IMAGE_FAILURE'
+export const UPLOAD_PROFILE_IMAGE_REQUEST = 'UPLOAD_PROFILE_IMAGE_REQUEST'
+export const UPLOAD_PROFILE_IMAGE_SUCCESS = 'UPLOAD_PROFILE_IMAGE_SUCCESS'
+export const UPLOAD_PROFILE_IMAGE_FAILURE = 'UPLOAD_PROFILE_IMAGE_FAILURE'
 
-export const DOWNLOAD_IMAGE_URL_REQUEST = 'DOWNLOAD_IMAGE_URL_REQUEST'
-export const DOWNLOAD_IMAGE_URL_SUCCESS = 'DOWNLOAD_IMAGE_URL_SUCCESS'
-export const DOWNLOAD_IMAGE_URL_FAILURE = 'DOWNLOAD_IMAGE_URL_FAILURE'
+export const DOWNLOAD_PROFILE_IMAGE_URL_REQUEST = 'DOWNLOAD_PROFILE_IMAGE_URL_REQUEST'
+export const DOWNLOAD_PROFILE_IMAGE_URL_SUCCESS = 'DOWNLOAD_PROFILE_IMAGE_URL_SUCCESS'
+export const DOWNLOAD_PROFILE_IMAGE_URL_FAILURE = 'DOWNLOAD_PROFILE_IMAGE_URL_FAILURE'
 
-export const PROFILE_SAVE_REQUEST = 'PROFILE_SAVE_REQUEST'
-export const PROFILE_SAVE_SUCCESS = 'PROFILE_SAVE_SUCCESS'
-export const PROFILE_SAVE_FAILURE = 'PROFILE_SAVE_FAILURE'
+export const EDIT_NAME_REQUEST = 'EDIT_NAME_REQUEST'
+export const EDIT_NAME_SUCCESS = 'EDIT_NAME_SUCCESS'
+export const EDIT_NAME_FAILURE = 'EDIT_NAME_FAILURE'
+
+export const EDIT_PROFILE_IMAGE_REQUEST = 'EDIT_PROFILE_IMAGE_REQUEST'
+export const EDIT_PROFILE_IMAGE_SUCCESS = 'EDIT_PROFILE_IMAGE_SUCCESS'
+export const EDIT_PROFILE_IMAGE_FAILURE = 'EDIT_PROFILE_IMAGE_FAILURE'
 
 const reducer = (state = initialState, action) => {
   switch(action.type) {
@@ -119,90 +126,132 @@ const reducer = (state = initialState, action) => {
         isLoggingOut: false,
         logOutError: action.error,
       }
-    case UPLOAD_IMAGE_REQUEST:
+    case UPLOAD_PROFILE_IMAGE_REQUEST:
       return {
         ...state,
-        isImageUploading: true,
-        isImageUploaded: false,
-        imageUploadError: null,
+        isProfileImageUploading: true,
+        isProfileImageUploaded: false,
+        profileImageUploadError: null,
       }
-    case UPLOAD_IMAGE_SUCCESS:
+    case UPLOAD_PROFILE_IMAGE_SUCCESS:
       return {
         ...state,
-        isImageUploading: false,
-        isImageUploaded: true,
+        isProfileImageUploading: false,
+        isProfileImageUploaded: true,
       }
-    case UPLOAD_IMAGE_FAILURE:
+    case UPLOAD_PROFILE_IMAGE_FAILURE:
       return {
         ...state,
-        isImageUploading: false,
-        imageUploadError: action.error,
+        isProfileImageUploading: false,
+        profileImageUploadError: action.error,
       }
-    case DOWNLOAD_IMAGE_URL_REQUEST:
+    case DOWNLOAD_PROFILE_IMAGE_URL_REQUEST:
       return {
         ...state,
-        isImageURLDownloading: true,
-        isImageURLDownloaded: false,
-        imageURLDownloadError: null,
+        isProfileImageURLDownloading: true,
+        isProfileImageURLDownloaded: false,
+        profileImageURLDownloadError: null,
       }
-    case DOWNLOAD_IMAGE_URL_SUCCESS:
+    case DOWNLOAD_PROFILE_IMAGE_URL_SUCCESS:
       return {
         ...state,
-        isImageURLDownloading: false,
-        isImageURLDownloaded: true,
-        imageSrc: action.data,
+        isProfileImageURLDownloading: false,
+        isProfileImageURLDownloaded: true,
       }
-    case DOWNLOAD_IMAGE_URL_FAILURE:
+    case DOWNLOAD_PROFILE_IMAGE_URL_FAILURE:
       return {
         ...state,
-        isImageURLDownloading: false,
-        imageURLDownloadError: action.error,
+        isProfileImageURLDownloading: false,
+        profileImageURLDownloadError: action.error,
       }
-    case PROFILE_SAVE_REQUEST:
+    case EDIT_NAME_REQUEST:
       return {
         ...state,
-        isProfileSaving: true,
-        isProfileSaved: false,
-        profileSaveError: null,
+        isNameEditing: true,
+        isNameEdited: false,
+        nameEditError: null,
       }
-    case PROFILE_SAVE_SUCCESS: {
+    case EDIT_NAME_SUCCESS: {
       // for Firestore Database
       fbaseFirestore.collection('whole users').doc(state.currentUser.uid).set({
-        displayName: action.data.displayName,
-        photoURL: action.data.photoURL,
+        displayName: action.data,
       }, { merge: true })
 
       fbaseFirestore.collection('whole users').doc(state.currentUser.uid).collection('joining groups').get().then((groups) => {
         groups.forEach((group) => {
+
           // update in admins
-          fbaseFirestore.collection(group.data().groupName).doc('group data').collection('admins').doc(state.currentUser.uid).set({
-            displayName: action.data.displayName,
-          }, { merge: true })
+          fbaseFirestore.collection(group.data().groupName).doc('group data').collection('admins').doc(state.currentUser.uid)
+          .get()
+          .then((doc) => {
+            if(doc.exists) {
+              fbaseFirestore.collection(group.data().groupName).doc('group data').collection('admins').doc(state.currentUser.uid).set({
+                displayName: action.data,
+              }, { merge: true })
+            }
+          })
         
           // update in members
           fbaseFirestore.collection(group.data().groupName).doc('group data').collection('members').doc(state.currentUser.uid).set({
-            displayName: action.data.displayName,
-            photoURL: action.data.photoURL,
+            displayName: action.data,
           }, { merge: true })
         })
       })
-      Router.replace('/')
+      
       return {
         ...state,
-        isProfileSaving: false,
-        isProfileSaved: true,
+        isNameEditing: false,
+        isNameEdited: true,
         currentUser: {
           ...state.currentUser,
-          displayName: action.data.displayName,
-          photoURL: action.data.photoURL,
+          displayName: action.data,
         }
       }
     }
-    case PROFILE_SAVE_FAILURE:
+    case EDIT_NAME_FAILURE:
       return {
         ...state,
-        isProfileSaving: false,
-        profileSaveError: action.error,
+        isNameEditing: false,
+        nameEditError: action.error,
+      }
+    case EDIT_PROFILE_IMAGE_REQUEST:
+      return {
+        ...state,
+        isProfileImageEditing: true,
+        isProfileImageEdited: false,
+        profileImageEditError: null,
+      }
+    case EDIT_PROFILE_IMAGE_SUCCESS: {
+      // for Firestore Database
+      fbaseFirestore.collection('whole users').doc(state.currentUser.uid).set({
+        photoURL: action.data,
+      }, { merge: true })
+
+      fbaseFirestore.collection('whole users').doc(state.currentUser.uid).collection('joining groups').get().then((groups) => {
+        groups.forEach((group) => {
+        
+          // update in members
+          fbaseFirestore.collection(group.data().groupName).doc('group data').collection('members').doc(state.currentUser.uid).set({
+            photoURL: action.data,
+          }, { merge: true })
+        })
+      })
+
+      return {
+        ...state,
+        isProfielImageEditing: false,
+        isProfileImageEdited: true,
+        currentUser: {
+          ...state.currentUser,
+          photoURL: action.data,
+        }
+      }
+    }
+    case EDIT_PROFILE_IMAGE_FAILURE:
+      return {
+        ...state,
+        isProfileImageEditing: false,
+        profileImageEditError: action.error,
       }
     default:
       return state

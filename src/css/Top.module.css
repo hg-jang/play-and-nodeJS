@@ -37,24 +37,40 @@
   display: flex; justify-content: center; align-items: center;
   cursor: pointer;
 }
-.header .header__loggedIn li:nth-child(2){
+
+.header .header__loggedIn .name_editing{
+  display: flex; align-items: center; margin-right: 8px;
+}
+.header .header__loggedIn .name_editing input{
+  margin-right: 4px;
+  border-bottom: 1px solid #3498db;
+  color: #3498db;
+}
+.header .header__loggedIn .name_editing i{
+  font-size: 24px; color: #3498db;
+  cursor: pointer; transition: .3s;
+}
+.header .header__loggedIn .name_editing i:hover{
+  color: #27ae60;
+}
+.header .header__loggedIn .name{
   display: flex; justify-content: center; align-items: center;
   position: relative;
   margin-right: 8px;
   transition: .5s;
 }
-.header .header__loggedIn li:nth-child(2) span{
+.header .header__loggedIn .name span{
   font-size: 28px; color: #3498db; line-height: 28px; letter-spacing: 1.2;
 }
-.header .header__loggedIn li:nth-child(2) i{
+.header .header__loggedIn .name i{
   position: absolute;
   display: none;
   font-size: 20px; color: #fff;
 }
-.header .header__loggedIn li:nth-child(2):hover span{
+.header .header__loggedIn .name:hover span{
   opacity: .6;
 }
-.header .header__loggedIn li:nth-child(2):hover i{
+.header .header__loggedIn .name:hover i{
   display: block;
   cursor: pointer;
 }
