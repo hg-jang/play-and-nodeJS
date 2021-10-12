@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import { fbaseFirestore } from '../src/fbase'
+import { Button } from 'semantic-ui-react'
 import styles from "../src/css/create-group.module.css"
 import classNames from 'classnames'
 
@@ -117,7 +118,7 @@ const create_group = () => {
               <span>그룹 소개 :&nbsp;</span><input type="text" name="groupIntroduce" className="input__text" onChange={onChangeInput} value={groupIntroduce} />
             </div>
           </div>
-          <div className={classNames({["button__index"]: true, [styles.button__public_createGroup]: true})} onClick={onClickCreateGroup} >생성하기</div>
+          <Button primary onClick={onClickCreateGroup} >생성하기</Button>
         </div>
       </div>
     </>
