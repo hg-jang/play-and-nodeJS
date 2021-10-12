@@ -24,6 +24,7 @@ const Post = ({ post }) => {
   const dispatch = useDispatch()
   const uid = useSelector((state) => state.auth.currentUser?.uid)
   const { editingImagePaths } = useSelector((state) => state.group)
+  // 여기서 imagePaths는 작업중인 post의 id와 그 속에 있는 사진들의 imagePaths로 이루어진 객체
   const [imagePaths, setImagePaths] = useState({})
   
   const imageInputRef = useRef()
@@ -103,7 +104,7 @@ const Post = ({ post }) => {
     })
     .then(() => {
       dispatch({
-        type: INIT_EDITING_IMAEPATHS,
+        type: INIT_EDITING_IMAGEPATHS,
         data: post.id,
       })
       setIsEditing(false)
@@ -157,6 +158,10 @@ const Post = ({ post }) => {
     loadComments()
   }, [])
 
+  useEffect(() => {
+    console.log(imagePaths);
+  }, [imagePaths])
+
   return (
     <div className={styles.post}>
       <div className={styles.post_writer}>
@@ -201,7 +206,7 @@ const Post = ({ post }) => {
             <Button primary size="tiny" onClick={onClickFinishEdit}>수정</Button>
           </Button.Group>
         </div>
-        {imagePaths &&
+        {typeof imagePaths !== "undefined" && imagePaths.imagePaths.length !== 0 &&
         <div className={styles.images}>
           {imagePaths.imagePaths.map((path, index) => (
             <div className={styles.img} key={index}>

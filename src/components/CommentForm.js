@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "semantic-ui-react";
@@ -16,7 +16,7 @@ const CommentForm = ({ post }) => {
   const dispatch = useDispatch()
   const { currentUser } = useSelector((state) => state.auth)
   const [comment, onChangeComment, setComment] = useInput('')
-  const [isFocused, setIsFocused] = useState(false)
+  
 
   const onClickCancel = useCallback(() => {
     setComment('')
@@ -55,14 +55,13 @@ const CommentForm = ({ post }) => {
 
   return (
     <div className={styles.comment_form}>
-      <input type="text" className="input__text__underline" placeholder="댓글을 적어주세요" value={comment} onChange={onChangeComment} onFocus={() => {setIsFocused(true)}} onBlur={() => {setIsFocused(false)}} />
-      {isFocused &&
+      <input type="text" className="input__text__underline" placeholder="댓글을 적어주세요" value={comment} onChange={onChangeComment} />
       <div>
         <Button.Group>
           <Button size="tiny" compact onClick={onClickCancel}>취소</Button>
-          <Button primary size="tiny" compact onClick={onClickAddComment}>작성</Button>
+          <Button primary size="tiny" compact onClick={onClickAddComment}>댓글 작성</Button>
         </Button.Group>
-      </div>}
+      </div>
     </div>
   )
 }
