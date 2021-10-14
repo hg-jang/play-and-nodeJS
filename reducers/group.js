@@ -6,17 +6,17 @@ export const initialState = {
   isPostLoaded: false,
   isGroupInfoLoaded: false,
   isAwaitorLoaded: false,
-  isImageUploading: false,      // 이미지 업로드
+  isImageUploading: false,        // 이미지 업로드
   isImageUploaded: false,
   imageUploadError: null,
-  isImageURLDownloading: false, // 이미지 경로 다운로드
+  isImageURLDownloading: false,   // 이미지 경로 다운로드
   isImageURLDownloaded: false,
   imageURLDownloadError: null,
-  isImageRemoving: false,      // 이미지 제거
+  isImageRemoving: false,         // 이미지 제거
   isImageRemoved: false,
   imageRemoveError: null,
-  imagePaths: [],
-  editingImagePaths: [],
+  isPostEdited: false,            // post 편집
+  postImagePaths: [],
   content: 'community',
   currentGroup: {
     chats: [],
@@ -31,25 +31,13 @@ export const UPLOAD_POST_IMAGE_REQUEST = 'UPLOAD_POST_IMAGE_REQUEST'
 export const UPLOAD_POST_IMAGE_SUCCESS = 'UPLOAD_POST_IMAGE_SUCCESS'
 export const UPLOAD_POST_IMAGE_FAILURE = 'UPLOAD_POST_IMAGE_FAILURE'
 
-export const UPLOAD_EDITING_POST_IMAGE_REQUEST = 'UPLOAD_EDITING_POST_IMAGE_REQUEST'
-export const UPLOAD_EDITING_POST_IMAGE_SUCCESS = 'UPLOAD_EDITING_POST_IMAGE_SUCCESS'
-export const UPLOAD_EDITING_POST_IMAGE_FAILURE = 'UPLOAD_EDITING_POST_IMAGE_FAILURE'
-
 export const DOWNLOAD_POST_IMAGE_URL_REQUEST = 'DOWNLOAD_POST_IMAGE_URL_REQUEST'
 export const DOWNLOAD_POST_IMAGE_URL_SUCCESS = 'DOWNLOAD_POST_IMAGE_URL_SUCCESS'
 export const DOWNLOAD_POST_IMAGE_URL_FAILURE = 'DOWNLOAD_POST_IMAGE_URL_FAILURE'
 
-export const DOWNLOAD_EDITING_POST_IMAGE_URL_REQUEST = 'DOWNLOAD_EDITING_POST_IMAGE_URL_REQUEST'
-export const DOWNLOAD_EDITING_POST_IMAGE_URL_SUCCESS = 'DOWNLOAD_EDITING_POST_IMAGE_URL_SUCCESS'
-export const DOWNLOAD_EDITING_POST_IMAGE_URL_FAILURE = 'DOWNLOAD_EDITING_POST_IMAGE_URL_FAILURE'
-
 export const REMOVE_IMAGE_REQUEST = 'REMOVE_IMAGE_REQUEST'
 export const REMOVE_IMAGE_SUCCESS = 'REMOVE_IMAGE_SUCCESS'
 export const REMOVE_IMAGE_FAILURE = 'REMOVE_IMAGE_FAILURE'
-
-export const REMOVE_EDITING_IMAGE_REQUEST = 'REMOVE_EDITING_IMAGE_REQUEST'
-export const REMOVE_EDITING_IMAGE_SUCCESS = 'REMOVE_EDITING_IMAGE_SUCCESS'
-export const REMOVE_EDITING_IMAGE_FAILURE = 'REMOVE_EDITING_IMAGE_FAILURE'
 
 export const REMOVE_AWAITOR = 'REMOVE_AWAITOR'
 
@@ -68,14 +56,13 @@ export const EDIT_GROUP_INFO = 'EDIT_GROUP_INFO'
 
 export const ADD_POST = 'ADD_POST'
 export const REMOVE_POST = 'REMOVE_POST'
+export const EDIT_POST_REQUEST = 'EDIT_POST_REQUEST'
 export const EDIT_POST = 'EDIT_POST'
-export const SET_EDITING_IMAGEPATHS = 'SET_EDITING_IMAGEPATHS'
 
 export const LIKE_POST = 'LIKE_POST'
 export const DISLIKE_POST = 'DISLIKE_POST'
 
 export const INIT_IMAGEPATHS = 'INIT_IMAGEPATHS'
-export const INIT_EDITING_IMAGEPATHS = 'INIT_EDITING_IMAGEPATHS'
 
 export const ADD_COMMENT = 'ADD_COMMENT'
 export const REMOVE_COMMENT = 'REMOVE_COMMENT'
@@ -185,17 +172,7 @@ const reducer = (state = initialState, action) => {
     case INIT_IMAGEPATHS:
       return {
         ...state,
-        imagePaths: [],
-      }
-    case INIT_EDITING_IMAGEPATHS:
-      return {
-        ...state,
-        editingImagePaths: state.imagePaths.map((path) => {
-          if(action.data !== path.id) {
-            return path
-          }
-          return null
-        })
+        postImagePaths: state.postImagePaths.filter((path) => path.id !== action.data),
       }
     case EDIT_GROUP_INFO:
       return {
@@ -232,17 +209,21 @@ const reducer = (state = initialState, action) => {
           posts: state.currentGroup.posts.filter((post) => post.id !== action.data)
         }
       }
-    case SET_EDITING_IMAGEPATHS:
+    case EDIT_POST_REQUEST:
+      const prevPaths = state.currentGroup.posts.find((post) => post.id === action.data).imagePaths.concat()
+
       return {
         ...state,
-        editingImagePaths: [...state.editingImagePaths, {
+        isPostEdited: false,
+        postImagePaths: [...state.postImagePaths, {
           id: action.data,
-          imagePaths: [],
+          imagePaths: prevPaths ? prevPaths : [],
         }]
       }
     case EDIT_POST:
       return {
         ...state,
+        isPostEdited: true,
         currentGroup: {
           ...state.currentGroup,
           posts: state.currentGroup.posts.map((post) => {
@@ -276,25 +257,6 @@ const reducer = (state = initialState, action) => {
         isImageUploading: false,
         imageUploadError: action.error,
       }
-    case UPLOAD_EDITING_POST_IMAGE_REQUEST:
-      return {
-        ...state,
-        isImageUploading: true,
-        isImageUploaded: false,
-        imageUploadError: null,
-      }
-    case UPLOAD_EDITING_POST_IMAGE_SUCCESS:
-      return {
-        ...state,
-        isImageUploading: false,
-        isImageUploaded: true,
-      }
-    case UPLOAD_EDITING_POST_IMAGE_FAILURE:
-      return {
-        ...state,
-        isImageUploading: false,
-        imageUploadError: action.error,
-      }
     case DOWNLOAD_POST_IMAGE_URL_REQUEST:
       return {
         ...state,
@@ -307,37 +269,27 @@ const reducer = (state = initialState, action) => {
         ...state,
         isImageURLDownloading: false,
         isImageURLDownloaded: true,
-        imagePaths: [...state.imagePaths, { path: action.data.path, ref: action.data.ref, }],
+        postImagePaths: 
+          state.postImagePaths.length === 0 ? 
+          // 첫 사진 추가일 경우
+          [{
+            id: action.data.id,
+            imagePaths: [{ path: action.data.path, ref: action.data.ref }]
+          }]
+          // 두 번째 사진 추가부터
+          :
+          state.postImagePaths.map((path) => {
+            if(path.id === action.data.id) {
+              return {
+                ...path,
+                imagePaths: [...path.imagePaths, { path: action.data.path, ref: action.data.ref }]
+              }
+            } else {
+              return path
+            }
+          })
       }
     case DOWNLOAD_POST_IMAGE_URL_FAILURE:
-      return {
-        ...state,
-        isImageURLDownloading: false,
-        imageURLDownloadError: action.error,
-      }
-    case DOWNLOAD_EDITING_POST_IMAGE_URL_REQUEST:
-      return {
-        ...state,
-        isImageURLDownloading: true,
-        isImageURLDownloaded: false,
-        imageURLDownloadError: null,
-      }
-    case DOWNLOAD_EDITING_POST_IMAGE_URL_SUCCESS:
-      return {
-        ...state,
-        isImageURLDownloading: false,
-        isImageURLDownloaded: true,
-        editingImagePaths: state.editingImagePaths.map((path) => {
-          if(path.id !== action.data.id) {
-            return path
-          }
-          return {
-            ...path,
-            imagePaths: [...path.imagePaths, { path: action.data.path, ref: action.data.ref }]
-          }
-        })
-      }
-    case DOWNLOAD_EDITING_POST_IMAGE_URL_FAILURE:
       return {
         ...state,
         isImageURLDownloading: false,
@@ -355,27 +307,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         isImageRemoving: false,
         isImageRemoved: true,
-        imagePaths: state.imagePaths.filter((path) => path.ref !== action.data)
-      }
-    case REMOVE_IMAGE_FAILURE:
-      return {
-        ...state,
-        isImageRemoving: false,
-        imageRemoveError: action.error,
-      }
-    case REMOVE_EDITING_IMAGE_REQUEST:
-      return {
-        ...state,
-        isImageRemoving: true,
-        isImageRemoved: false,
-        imageRemoveError: null,
-      }
-    case REMOVE_EDITING_IMAGE_SUCCESS:
-      return {
-        ...state,
-        isImageRemoving: false,
-        isImageRemoved: true,
-        editingImagePaths: state.editingImagePaths.map((path) => {
+        postImagePaths: state.postImagePaths.map((path) => {
           if(path.id === action.data.id) {
             return {
               ...path,
@@ -383,9 +315,22 @@ const reducer = (state = initialState, action) => {
             }
           }
           return path
-        })
+        }),
+        currentGroup: {
+          ...state.currentGroup,
+          posts: state.currentGroup.posts.map((post) => {
+            if(post.id === action.data.id) {
+              return {
+                ...post,
+                imagePaths: post.imagePaths.filter((path) => path.ref !== action.data.ref)
+              }
+            } else {
+              return post
+            }
+          })
+        }
       }
-    case REMOVE_EDITING_IMAGE_FAILURE:
+    case REMOVE_IMAGE_FAILURE:
       return {
         ...state,
         isImageRemoving: false,
@@ -519,7 +464,6 @@ const reducer = (state = initialState, action) => {
                   losedGames: member.losedGames + 1,
                 }
               }
-              
             }
           })
         }

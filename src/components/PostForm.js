@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, TextArea, Button } from 'semantic-ui-react'
@@ -31,12 +31,12 @@ export const getDateWithTime = () => {
 const PostForm = () => {
   const router = useRouter()
   const { group } = router.query
-
+  
   const dispatch = useDispatch()
   const [post, onChangePost, setPost] = useInput('')
   
   const { currentUser } = useSelector((state) => state.auth)
-  const { imagePaths } = useSelector((state) => state.group)
+  const { postImagePaths } = useSelector((state) => state.group)
 
   const imageInputRef = useRef()
   const onChangeImageInput = useCallback((e) => {
@@ -48,12 +48,21 @@ const PostForm = () => {
       data: {
         src: src,
         file: file,
+        id: "new",
       }
     })
   }, [])
 
   const onClickUploadImage = useCallback(() => {
     imageInputRef.current.click()
+  }, [])
+
+  const onClickRemoveImage = useCallback((e) => {
+    dispatch({
+      type: REMOVE_IMAGE_REQUEST,
+      imageRef: e.target.dataset.ref,
+      id: "new",
+    })
   }, [])
 
   const onClickAddPost = useCallback(() => {
@@ -64,36 +73,30 @@ const PostForm = () => {
       writerPhotoURL: currentUser.photoURL,
       writerDisplayName: currentUser.displayName,
       content: post,
-      imagePaths: imagePaths,
+      imagePaths: postImagePaths.length !== 0 ? postImagePaths.find((path) => path.id === "new").imagePaths : [],
       date: getDateWithTime(),
       id: id,
     }
 
     fbaseFirestore.collection(group).doc('group data').collection('posts').doc(id).set(postObj)
     .then(() => {
+      // posts 목록 업데이트
       dispatch({
         type: ADD_POST,
         data: postObj,
+      })
+      // input 초기화
+      setPost('')
+      // 이미지 경로 초기화
+      dispatch({
+        type: INIT_IMAGEPATHS,
+        data: "new",
       })
     })
     .catch((error) => {
       alert(error)
     })
-    .then(() => {
-      setPost('')
-      dispatch({
-        type: INIT_IMAGEPATHS,
-      })
-    })
-  }, [group, post, imagePaths])
-
-  const onClickRemoveImage = useCallback((e) => {
-    dispatch({
-      type: REMOVE_IMAGE_REQUEST,
-      data: e.target.dataset.ref,
-    })
-  }, [])
-
+  }, [group, post, postImagePaths])
 
   return (
     <Form>
@@ -103,9 +106,9 @@ const PostForm = () => {
         <Button secondary onClick={onClickUploadImage}>사진 추가</Button>
         <Button primary onClick={onClickAddPost}>작성</Button>
       </div>
-      {imagePaths.length > 0 &&
+      {postImagePaths.length > 0 && postImagePaths.find((path) => path.id === "new") &&
       <div className={styles.images}>
-        {imagePaths.map((path, index) => (
+        {postImagePaths.find((path) => path.id === "new").imagePaths.map((path, index) => (
           <div className={styles.img} key={index}>
             <img src={path.path} alt="image" />
             <Button size="tiny" color='red' data-ref={path.ref} onClick={onClickRemoveImage}>제거</Button>

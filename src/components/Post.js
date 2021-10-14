@@ -4,8 +4,8 @@ import { fbaseFirestore } from "../fbase";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { 
-  INIT_EDITING_IMAGEPATHS, REMOVE_POST, EDIT_POST, 
-  SET_EDITING_IMAGEPATHS, UPLOAD_EDITING_POST_IMAGE_REQUEST, REMOVE_EDITING_IMAGE_REQUEST,
+  INIT_IMAGEPATHS, REMOVE_POST, EDIT_POST, EDIT_POST_REQUEST,
+  UPLOAD_POST_IMAGE_REQUEST, REMOVE_IMAGE_REQUEST,
   LOAD_COMMENTS,
  } from "../../reducers/group";
  import CommentForm from "./CommentForm";
@@ -23,9 +23,7 @@ const Post = ({ post }) => {
 
   const dispatch = useDispatch()
   const uid = useSelector((state) => state.auth.currentUser?.uid)
-  const { editingImagePaths } = useSelector((state) => state.group)
-  // 여기서 imagePaths는 작업중인 post의 id와 그 속에 있는 사진들의 imagePaths로 이루어진 객체
-  const [imagePaths, setImagePaths] = useState({})
+  const { postImagePaths, isPostEdited } = useSelector((state) => state.group)
   
   const imageInputRef = useRef()
   const onClickUploadImage = useCallback(() => {
@@ -36,7 +34,7 @@ const Post = ({ post }) => {
     const src = file.name
 
     return dispatch({
-      type: UPLOAD_EDITING_POST_IMAGE_REQUEST,
+      type: UPLOAD_POST_IMAGE_REQUEST,
       data: {
         src: src,
         file: file,
@@ -44,21 +42,19 @@ const Post = ({ post }) => {
       }
     })
   }, [])
-  const onClickRemoveImage = useCallback((e) => {
+  const onClickRemoveImage = (e) => {
     dispatch({
-      type: REMOVE_EDITING_IMAGE_REQUEST,
-      data: {
-        imageRef: e.target.dataset.ref,
-        id: post.id,
-      }
+      type: REMOVE_IMAGE_REQUEST,
+      imageRef: e.target.dataset.ref,
+      id: post.id,
     })
-  }, [])
+  }
 
   const onClickEditPost = useCallback(() => {
     setNewPost(post.content)
     setIsEditing(true)
     dispatch({
-      type: SET_EDITING_IMAGEPATHS,
+      type: EDIT_POST_REQUEST,
       data: post.id,
     })
   }, [post])
@@ -79,17 +75,25 @@ const Post = ({ post }) => {
   const onClickCancle = useCallback(() => {
     setNewPost('')
     dispatch({
-      type: INIT_EDITING_IMAGEPATHS,
+      type: INIT_IMAGEPATHS,
+      data: post.id,
     })
     setIsEditing(false)
   }, [])
 
   const onClickFinishEdit = useCallback(() => {
+    const imagePaths =
+    postImagePaths.find((path) => path.id === post.id)
+    ? postImagePaths.find((path) => path.id === post.id).imagePaths
+    : []
+
+    console.log(imagePaths);
     fbaseFirestore.collection(group).doc('group data').collection('posts').doc(post.id).set({
       content: newPost,
       imagePaths: imagePaths,
     }, { merge: true })
     .then(() => {
+      // 포스트 내용 수정 dispatch
       dispatch({
         type: EDIT_POST,
         data: {
@@ -98,25 +102,30 @@ const Post = ({ post }) => {
           imagePaths: imagePaths,
         }
       })
+      // 해당 id의 iamgepaths 초기화
+      dispatch({
+        type: INIT_IMAGEPATHS,
+        data: post.id,
+      })
     })
     .catch((error) => {
       console.log(error);
     })
-    .then(() => {
-      dispatch({
-        type: INIT_EDITING_IMAGEPATHS,
-        data: post.id,
-      })
+  }, [post, newPost, postImagePaths])
+
+  // useEffect(() => {
+  //   if(editingImagePaths) {
+  //     setImagePaths(editingImagePaths.concat().find((path) => path.id === post.id))
+  //   }
+  // }, [editingImagePaths])
+
+  // post 편집 끝나면
+  useEffect(() => {
+    if(isPostEdited) {
       setIsEditing(false)
       setNewPost('')
-    })
-  }, [post, newPost, imagePaths])
-
-  useEffect(() => {
-    if(editingImagePaths) {
-      setImagePaths(editingImagePaths.concat().find((path) => path.id === post.id))
     }
-  }, [editingImagePaths])
+  }, [isPostEdited])
 
   const loadComments = () => {
     let commentsArr = []
@@ -157,10 +166,6 @@ const Post = ({ post }) => {
   useEffect(() => {
     loadComments()
   }, [])
-
-  useEffect(() => {
-    console.log(imagePaths);
-  }, [imagePaths])
 
   return (
     <div className={styles.post}>
@@ -206,9 +211,9 @@ const Post = ({ post }) => {
             <Button primary size="tiny" onClick={onClickFinishEdit}>수정</Button>
           </Button.Group>
         </div>
-        {typeof imagePaths !== "undefined" && imagePaths.imagePaths.length !== 0 &&
+        {typeof postImagePaths.length !== 0 && postImagePaths.find((path) => path.id === post.id) &&
         <div className={styles.images}>
-          {imagePaths.imagePaths.map((path, index) => (
+          {postImagePaths.find((path) => path.id === post.id).imagePaths.map((path, index) => (
             <div className={styles.img} key={index}>
               <img src={path.path} alt="image" />
               <Button size="tiny" color='red' data-ref={path.ref} onClick={onClickRemoveImage}>제거</Button>

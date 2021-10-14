@@ -33,7 +33,6 @@ const CommentForm = ({ post }) => {
       date: getDateWithTime(),
       like: [],
     }
-    console.log(commentObj);
     fbaseFirestore.collection(group).doc('group data').collection('posts').doc(post.id).collection('comments').doc(id)
     .set(commentObj)
     .then(() => {
