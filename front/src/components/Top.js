@@ -8,6 +8,7 @@ import styles from '../css/Top.module.css'
 import { 
   LOG_OUT_REQUEST, EDIT_NAME_REQUEST, UPLOAD_PROFILE_IMAGE_REQUEST,
 } from '../../reducers/auth'
+import Router from 'next/router'
 
 const Top = () => {
   const imageInputRef = useRef()
@@ -15,7 +16,7 @@ const Top = () => {
   const [text, onChangeText, setText] = useInput('')
 
   const dispatch = useDispatch()
-  const { isLoggedIn, currentUser, isNameEdited } = useSelector((state) => state.auth)
+  const { isLoggedIn, currentUser, isNameEdited } = useSelector((state) => state.user)
 
   const defaultPhotoURL = '/img/default_profile.jpg'
 
@@ -57,6 +58,11 @@ const Top = () => {
   }
 
   useEffect(() => {
+    if(isLoggedIn) {
+      Router.replace('/')
+    }
+  }, [isLoggedIn])
+  useEffect(() => {
     if(isNameEdited) {
       setText('')
       setIsNameEditing(false)
@@ -83,7 +89,7 @@ const Top = () => {
             </li>
             :
             <li className={styles.name}>
-              <span>{currentUser.displayName ? currentUser.displayName : '익명의 사용자'}님</span>
+              <span>{currentUser.nickname}님</span>
               <Icon name="edit" onClick={onClickEditName} />
             </li>
             }
