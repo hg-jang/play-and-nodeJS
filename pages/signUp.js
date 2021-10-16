@@ -39,7 +39,6 @@ const signUp = () => {
     if(!term) {
       return setTermError(true)
     }
-    console.log(email, password)
     dispatch({
       type: SIGN_UP_REQUEST,
       data: { email: email, password: password },
