@@ -4,10 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fbaseFirestore } from '../../src/fbase';
 import { CHANGE_CONTENT, LOAD_GROUP_INFO, LOAD_MEMBERS, LOAD_AWAITORS, LOAD_GROUP_SUCCESS } from '../../reducers/group';
 import { Loader } from 'semantic-ui-react';
+
 import AdminDashboard from '../../src/components/Admin_Dashboard';
 import AdminConfig from '../../src/components/Admin_Config'
 import AdminRecording from '../../src/components/Admin_Recording'
 import AdminMembers from '../../src/components/Admin_Members'
+import AdminLayout from '../../src/layouts/AdminLayout';
 import styles from '../../src/css/admin_group.module.css'
 
 const admin_main = () => {
@@ -124,17 +126,17 @@ const admin_main = () => {
   }, [isGroupInfoLoaded, isMemberLoaded, isAwaitorLoaded])
 
   return (
-    <>
-    {isGroupLoading && <Loader>Loading</Loader>}
-    {isGroupLoaded &&
-    <div className={styles.admin_container}>
-      {content === 'admin-dashboard' && <AdminDashboard />}
-      {content === 'admin-config' && <AdminConfig />}
-      {content === 'admin-recording' && <AdminRecording />}
-      {content === 'admin-members' && <AdminMembers />}
-    </div>}
-    </>
+    <AdminLayout>
+      {isGroupLoading && <Loader>Loading</Loader>}
+      {isGroupLoaded &&
+      <div className={styles.admin_container}>
+        {content === 'admin-dashboard' && <AdminDashboard />}
+        {content === 'admin-config' && <AdminConfig />}
+        {content === 'admin-recording' && <AdminRecording />}
+        {content === 'admin-members' && <AdminMembers />}
+      </div>}
+    </AdminLayout>
   )
-};
+}
 
 export default admin_main

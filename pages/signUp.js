@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import useInput from '../hooks/useInput'
 import { SIGN_UP_REQUEST } from '../reducers/auth'
 import styles from '../src/css/signUp.module.css'
+import PublicLayout from '../src/layouts/PublicLayout'
 
 
 // 회원가입 이후의 라우터 처리 필요
@@ -52,33 +53,34 @@ const signUp = () => {
   }, [signUpError])
 
   return (
-    <div className={styles.signUp}>
-      <h1>회원가입</h1>
-      <form>
-        <div>
-          <label htmlFor="user-email">이메일</label>
-          <input className="input__underline" name="user-email" value={email} onChange={onChangeEmail} placeholder="이메일" />
-        </div>
-        <div>
-          <label htmlFor="user-password">비밀번호</label>
-          <input type="password" className="input__underline" name="user-password" value={password} onChange={onChangePassword} placeholder="비밀번호" required />
-        </div>
-        <div>
-          <label htmlFor="user-password-check">비밀번호 확인</label>
-          <input className="input__underline" type="password" name="user-password-check" value={passwordCheck} onChange={onChangePasswordCheck} placeholder="비밀번호 확인" required />
-        </div>
-        {passwordError && <span>비밀번호가 일치하지 않습니다.</span>}
-        <div className={styles.term}>
+    <PublicLayout>
+      <div className={styles.signUp}>
+        <h1>회원가입</h1>
+        <form>
           <div>
-            <input type="checkbox" onClick={onClickCheckbox} />
-            <label>주인님의 말에 복종할것은 맹세합니다.</label>
+            <label htmlFor="user-email">이메일</label>
+            <input className="input__underline" name="user-email" value={email} onChange={onChangeEmail} placeholder="이메일" />
           </div>
-          {termError && <span>복종 서약에 동의하십시오.</span>}
-        </div>
-        <div className="button__normal" onClick={onClickSignUp}>회원가입</div>
-      </form>
-
-    </div>
+          <div>
+            <label htmlFor="user-password">비밀번호</label>
+            <input type="password" className="input__underline" name="user-password" value={password} onChange={onChangePassword} placeholder="비밀번호" required />
+          </div>
+          <div>
+            <label htmlFor="user-password-check">비밀번호 확인</label>
+            <input className="input__underline" type="password" name="user-password-check" value={passwordCheck} onChange={onChangePasswordCheck} placeholder="비밀번호 확인" required />
+          </div>
+          {passwordError && <span>비밀번호가 일치하지 않습니다.</span>}
+          <div className={styles.term}>
+            <div>
+              <input type="checkbox" onClick={onClickCheckbox} />
+              <label>주인님의 말에 복종할것은 맹세합니다.</label>
+            </div>
+            {termError && <span>복종 서약에 동의하십시오.</span>}
+          </div>
+          <div className="button__normal" onClick={onClickSignUp}>회원가입</div>
+        </form>
+      </div>
+    </PublicLayout>
   )
 }
 

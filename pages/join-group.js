@@ -4,6 +4,7 @@ import { useSelector } from "react-redux"
 import useInput from "../hooks/useInput"
 import styles from '../src/css/join-group.module.css'
 import classNames from 'classnames'
+import PublicLayout from "../src/layouts/PublicLayout"
 
 const join_group = () => {
   const { currentUser } = useSelector((state) => state.auth)
@@ -57,20 +58,22 @@ const join_group = () => {
   }, [filter])
 
   return (
-    <div className={styles.joinGroup}>
-      <div className={classNames({["container"]: true, [styles.container__public_joinGroup]: true})}>
-        <input type="text" onChange={onChnageInput} value={filter} placeholder="원하는 그룹명을 입력하세요." />
-        <div>
-          {filteredGroups.map((el, index) => 
-            <div className={styles.card} key={index}>
-              <h1 className={styles.group_name}>{el.groupName}</h1>
-              <h2 className={styles.group_introduce}>{el.groupIntroduce}</h2>
-              <div onClick={onClickJoin} data-group={el.groupName}>가입 신청</div>
-            </div>
-          )}
+    <PublicLayout>
+      <div className={styles.joinGroup}>
+        <div className={classNames({["container"]: true, [styles.container__public_joinGroup]: true})}>
+          <input type="text" onChange={onChnageInput} value={filter} placeholder="원하는 그룹명을 입력하세요." />
+          <div>
+            {filteredGroups.map((el, index) => 
+              <div className={styles.card} key={index}>
+                <h1 className={styles.group_name}>{el.groupName}</h1>
+                <h2 className={styles.group_introduce}>{el.groupIntroduce}</h2>
+                <div onClick={onClickJoin} data-group={el.groupName}>가입 신청</div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </PublicLayout>
   )
 }
 

@@ -5,6 +5,7 @@ import { fbaseFirestore } from '../src/fbase'
 import { Button } from 'semantic-ui-react'
 import styles from "../src/css/create-group.module.css"
 import classNames from 'classnames'
+import PublicLayout from '../src/layouts/PublicLayout'
 
 export const getDate = () => {
   const today = new Date()
@@ -106,7 +107,7 @@ const create_group = () => {
   }
 
   return (
-    <>
+    <PublicLayout>
       <div className={styles.createGroup}>
         <div className={classNames({["container"]: true, [styles.container__public_createGroup]: true})}>
           <h1 className={styles.title}>그룹 생성하기</h1>
@@ -121,7 +122,7 @@ const create_group = () => {
           <Button primary onClick={onClickCreateGroup} >생성하기</Button>
         </div>
       </div>
-    </>
+    </PublicLayout>
   )
 }
 

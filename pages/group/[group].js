@@ -11,6 +11,7 @@ import Community from "../../src/components/Community"
 import GameRecordForm from "../../src/components/GameRecordForm"
 import Ad from "../../src/components/Ad"
 import styles from '../../src/css/group.module.css'
+import GroupLayout from '../../src/layouts/GroupLayout'
 
 const group_index = () => {
   const router = useRouter()
@@ -160,29 +161,29 @@ const group_index = () => {
   }, [isMemberLoaded, isGameLoaded, isPostLoaded])
 
   return (
-    <>
-    {isGroupLoading && <Loader>Loading</Loader>}
-    {isGroupLoaded && 
-    <>
-      {content === 'community' && <Community />}
-      {content === 'game records' && <GameRecords />}
-      {(content === 'ranking' || content === 'member list') &&
-      <div className={styles.group_container_rk_ml}>
-        <div className={styles.contents}>
-          {content === 'ranking' && <Ranking />}
-          {content === 'member list' && <MemberList />}
-        </div>
-        <div className={styles.asides}>
-          <div className={styles.aside1}>
-            <GameRecordForm games={currentGroup.games} />
+    <GroupLayout>
+      {isGroupLoading && <Loader>Loading</Loader>}
+      {isGroupLoaded && 
+      <>
+        {content === 'community' && <Community />}
+        {content === 'game records' && <GameRecords />}
+        {(content === 'ranking' || content === 'member list') &&
+        <div className={styles.group_container_rk_ml}>
+          <div className={styles.contents}>
+            {content === 'ranking' && <Ranking />}
+            {content === 'member list' && <MemberList />}
           </div>
-          <div className={styles.aside2}>
-            <Ad />
+          <div className={styles.asides}>
+            <div className={styles.aside1}>
+              <GameRecordForm games={currentGroup.games} />
+            </div>
+            <div className={styles.aside2}>
+              <Ad />
+            </div>
           </div>
-        </div>
-      </div>}
-    </>}
-    </>
+        </div>}
+      </>}
+    </GroupLayout>
   )
 }
 

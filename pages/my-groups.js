@@ -6,6 +6,7 @@ import { LOAD_GROUP_INIT } from '../reducers/group'
 import Link from 'next/link'
 import GroupCard from '../src/components/GroupCard'
 import styles from '../src/css/my-groups.module.css'
+import PublicLayout from '../src/layouts/PublicLayout'
 
 const my_groups = () => {
   const [groupList, setGroupList] = useState([])
@@ -69,22 +70,24 @@ const my_groups = () => {
 
 
   return (
-    <div className={styles.my_groups}>
-      <div className={styles.joined_groups}>
-        <div className={styles.container__joined_groups}>
-          <h1>가입한 그룹</h1>
-          <div>
-            {groupList.map((group, index) => <GroupCard group={group} index={index} />)}
+    <PublicLayout>
+      <div className={styles.my_groups}>
+        <div className={styles.joined_groups}>
+          <div className={styles.container__joined_groups}>
+            <h1>가입한 그룹</h1>
+            <div>
+              {groupList.map((group, index) => <GroupCard group={group} index={index} />)}
+            </div>
+          </div>
+        </div>
+        <div className={styles.new_group}>
+          <div className={styles.container__new_group}>
+            <Button primary><Link href="/create-group"><a>그룹 생성하기</a></Link></Button>
+            <Button primary><Link href="/join-group"><a>그룹 가입하기</a></Link></Button>
           </div>
         </div>
       </div>
-      <div className={styles.new_group}>
-        <div className={styles.container__new_group}>
-          <Button primary><Link href="/create-group"><a>그룹 생성하기</a></Link></Button>
-          <Button primary><Link href="/join-group"><a>그룹 가입하기</a></Link></Button>
-        </div>
-      </div>
-    </div>
+    </PublicLayout>
   )
 }
 
