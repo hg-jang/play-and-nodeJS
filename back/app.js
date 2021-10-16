@@ -1,30 +1,19 @@
 const express = require('express');
+const postRouter = require('./routes/post')
+const db = require('./models')
 
 const app = express();
 
-app.get('/', (req, res) => {
-  res.send('hello express')  // 문자열을 응답한 것
-});
+db.sequelize.sync()
+  .then(() => {
+    console.log('db 연결 성공...');
+  })
+  .catch(console.error)
 
-app.get('/api', (req, res) => {
-  res.send('hello api')
-});
 
-app.get('/api/posts', (req, res) => {
-  res.json([                  // json 형태로 응답
-    { id: 1, content: 'hello1' },
-    { id: 2, content: 'hello2' },
-    { id: 3, content: 'hello3' },
-  ])
-});
-
-app.post('/api/post', (req, res) => {
-  res.send({ id: 1, content: 'hello' })
-});
-
-app.delete('/api/post', (req, res) => {
-  res.send({ id: 1 })
-});
+// app.use('/user', userRouter);
+// app.user('/group', groupRouter);
+app.use('/post', postRouter);
 
 app.listen(3065, () => {
   console.log('서버 실행 중');
