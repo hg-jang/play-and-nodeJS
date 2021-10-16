@@ -1,19 +1,30 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useInput from '../hooks/useInput'
-import { SIGN_UP_REQUEST } from '../reducers/auth'
+import { SIGN_UP_REQUEST } from '../reducers/user'
+import { Button, Form } from 'semantic-ui-react'
+import Router from 'next/router'
+
 import styles from '../src/css/signUp.module.css'
 import PublicLayout from '../src/layouts/PublicLayout'
 
-
-// 회원가입 이후의 라우터 처리 필요
-// 에러 처리 필요
-
 const signUp = () => {
   const dispatch = useDispatch()
-  const { signUpError } = useSelector((state) => state.auth)
+  const { signUpError, isSignedUp } = useSelector((state) => state.user)
+
+  useEffect(() => {
+    if(isSignedUp) {
+      Router.push('/')
+    }
+  }, [isSignedUp])
+  useEffect(() => {
+    if(signUpError) {
+      alert('회원가입 오류 :', signUpError)
+    }
+  }, [signUpError])
 
   const [email, onChangeEmail] = useInput('')
+  const [nickname, onChangeNickname] = useInput('')
   const [password, onChangePassword] = useInput('')
   
   const [passwordCheck, setPasswordCheck] = useState('')
@@ -32,42 +43,41 @@ const signUp = () => {
     }
   }, [])
 
-  const onClickSignUp = useCallback(() => {
+  const onSubmit = useCallback(() => {
     if(password !== passwordCheck) {
       return setPasswordError(true)
     }
     if(!term) {
       return setTermError(true)
     }
+    console.log(email, nickname, password)
     dispatch({
       type: SIGN_UP_REQUEST,
-      data: { email: email, password: password },
+      data: { email, nickname, password },
     })
-  }, [email, password, passwordCheck, term])
-
-  useEffect(() => {
-    if(signUpError) {
-      alert(signUpError)
-    }
-  }, [signUpError])
+  }, [email, nickname, password, passwordCheck, term])
 
   return (
     <PublicLayout>
       <div className={styles.signUp}>
         <h1>회원가입</h1>
-        <form>
-          <div>
+        <Form onSubmit={onSubmit}>
+          <Form.Field>
             <label htmlFor="user-email">이메일</label>
-            <input className="input__underline" name="user-email" value={email} onChange={onChangeEmail} placeholder="이메일" />
-          </div>
-          <div>
+            <input name="user-email" value={email} onChange={onChangeEmail} placeholder="이메일" />
+          </Form.Field>
+          <Form.Field>
+            <label htmlFor="user-nickname">이름</label>
+            <input required name="user-nickname" value={nickname} onChange={onChangeNickname} placeholder="이름" />
+          </Form.Field>
+          <Form.Field>
             <label htmlFor="user-password">비밀번호</label>
-            <input type="password" className="input__underline" name="user-password" value={password} onChange={onChangePassword} placeholder="비밀번호" required />
-          </div>
-          <div>
+            <input type="password" name="user-password" value={password} onChange={onChangePassword} placeholder="비밀번호" required />
+          </Form.Field>
+          <Form.Field>
             <label htmlFor="user-password-check">비밀번호 확인</label>
             <input className="input__underline" type="password" name="user-password-check" value={passwordCheck} onChange={onChangePasswordCheck} placeholder="비밀번호 확인" required />
-          </div>
+          </Form.Field>
           {passwordError && <span>비밀번호가 일치하지 않습니다.</span>}
           <div className={styles.term}>
             <div>
@@ -76,8 +86,8 @@ const signUp = () => {
             </div>
             {termError && <span>복종 서약에 동의하십시오.</span>}
           </div>
-          <div className="button__normal" onClick={onClickSignUp}>회원가입</div>
-        </form>
+          <Button primary type="submit">회원가입</Button>
+        </Form>
       </div>
     </PublicLayout>
   )
